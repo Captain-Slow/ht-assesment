@@ -9,43 +9,60 @@ datasource db {
 }
 
 model User {
-  id                  String               @id @default(uuid())
-  email               String               @unique
-  profile             Profile?
-  paymentDetail       PaymentDetail?
-  notificationSetting NotificationSetting?
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
+  id                   String                @id @default(uuid())
+  email                String                @unique
+  profile              Profile?
+  paymentDetail        PaymentDetail?
+  notificationSetting  NotificationSetting?
+  userSubscriptionPlan UserSubscriptionPlan?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 }
 
 model Profile {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  name      String?
-  jobTitle  String?
-  company   String?
-  bio       String?
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?  @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String      @id @default(uuid())
+  username     String      @unique
+  name         String?
+  jobTitle     String?
+  company      String?
+  bio          String?
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vernacular   Vernacular? @relation(fields: [vernacularId], references: [id])
+  vernacularId String?
+  userId       String?     @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 model PaymentDetail {
   id             String    @id @default(uuid())
   cardHolderName String?
-  cardNumber     Int?
+  cardNumber     String?
   cardExpiryDate DateTime?
-  cvc            Int?
-  user           User?     @relation(fields: [userId], references: [id])
+  cardCvv        String?
+  country        Country?  @relation(fields: [countryId], references: [id])
+  countryId      String?
+  user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String?   @unique
 }
 
 model PlanType {
-  id                String  @id @default(uuid())
-  title             String
-  rate              Float?
-  compoundingPeriod String?
+  id                    String                 @id @default(uuid())
+  title                 String
+  description           String
+  rate                  Float?
+  compoundingPeriod     String?
+  userSubscriptionPlans UserSubscriptionPlan[]
+}
+
+model UserSubscriptionPlan {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planTypeId String
+  planType   PlanType @relation(fields: [planTypeId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model NotificationSetting {
@@ -57,13 +74,20 @@ model NotificationSetting {
   mentionAlert       Boolean  @default(false)
   followAlert        Boolean  @default(false)
   repliesAlert       Boolean  @default(false)
-  user               User?    @relation(fields: [userId], references: [id])
+  user               User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String?  @unique
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
 
 model Country {
-  id    String @id @default(uuid())
-  title String
+  id             String          @id @default(uuid())
+  title          String          @unique
+  paymentDetails PaymentDetail[]
+}
+
+model Vernacular {
+  id       String    @id @default(uuid())
+  title    String    @unique
+  profiles Profile[]
 }

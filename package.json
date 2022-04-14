@@ -12,8 +12,11 @@
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
     "generate:prisma": "prisma generate",
     "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
+    "generate:nexus": "ts-node --transpile-only -P nexus.tsconfig.json pages/api",
+    "dev:migrate": "npx prisma migrate dev",
+    "dev:seed": "npx prisma db seed",
     "run:studio": "npx prisma studio",
-    "generate:nexus": "ts-node --transpile-only -P nexus.tsconfig.json pages/api"
+    "reset:db": "npx prisma migrate reset"
   },
   "dependencies": {
     "@apollo/client": "3.5.10",
@@ -23,8 +26,9 @@
     "graphql": "15.8.0",
     "graphql-scalars": "1.17.0",
     "graphql-tag": "2.12.6",
-    "micro": "9.3.4",
+    "lodash": "^4.17.21",
     "micro-cors": "0.1.1",
+    "moment": "^2.29.2",
     "next": "12.1.5",
     "nexus": "1.3.0",
     "react": "17.0.2",

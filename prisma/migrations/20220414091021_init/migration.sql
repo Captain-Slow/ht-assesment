@@ -14,29 +14,45 @@ CREATE TABLE "Profile" (
     "jobTitle" TEXT,
     "company" TEXT,
     "bio" TEXT,
+    "vernacularId" TEXT,
     "userId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Profile_vernacularId_fkey" FOREIGN KEY ("vernacularId") REFERENCES "Vernacular" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "PaymentDetail" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "cardHolderName" TEXT,
-    "cardNumber" INTEGER,
+    "cardNumber" TEXT,
     "cardExpiryDate" DATETIME,
-    "cvc" INTEGER,
+    "cardCvv" TEXT,
+    "countryId" TEXT,
     "userId" TEXT,
-    CONSTRAINT "PaymentDetail_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "PaymentDetail_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "PaymentDetail_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "Country" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "PlanType" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "rate" REAL,
     "compoundingPeriod" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "UserSubscriptionPlan" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "planTypeId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "UserSubscriptionPlan_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "UserSubscriptionPlan_planTypeId_fkey" FOREIGN KEY ("planTypeId") REFERENCES "PlanType" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -52,11 +68,17 @@ CREATE TABLE "NotificationSetting" (
     "userId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "NotificationSetting_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT "NotificationSetting_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "Country" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "title" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Vernacular" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL
 );
@@ -74,4 +96,13 @@ CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
 CREATE UNIQUE INDEX "PaymentDetail_userId_key" ON "PaymentDetail"("userId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "UserSubscriptionPlan_userId_key" ON "UserSubscriptionPlan"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "NotificationSetting_userId_key" ON "NotificationSetting"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Country_title_key" ON "Country"("title");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Vernacular_title_key" ON "Vernacular"("title");
