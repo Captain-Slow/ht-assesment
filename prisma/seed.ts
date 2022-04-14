@@ -3,15 +3,18 @@ import { faker } from "@faker-js/faker"
 
 const prisma = new PrismaClient()
 
-const userData = Array.from({ length: 5 + 1 }, (n, i) => i).map(() => {
-  const name = faker.internet.userName()
+const userData: Prisma.UserCreateInput[] = Array.from(
+  { length: 5 + 1 },
+  (n, i) => i
+).map(() => {
+  const name = faker.name.findName()
 
   return {
     email: faker.internet.email(),
     profile: {
       create: {
-        username: name,
-        name: faker.name.findName(),
+        username: faker.internet.userName(),
+        name: name,
         jobTitle: faker.name.jobTitle(),
         company: faker.company.companyName(),
         bio: faker.lorem.paragraphs(3),
@@ -23,16 +26,16 @@ const userData = Array.from({ length: 5 + 1 }, (n, i) => i).map(() => {
       },
     },
     notificationSetting: {
-      communicationAlert: true,
-      securityAlert: true,
-      mentionAlert: true,
-      followAlert: true,
-      repliesAlert: true,
+      create: {
+        communicationAlert: true,
+        securityAlert: true,
+        mentionAlert: true,
+        followAlert: true,
+        repliesAlert: true,
+      },
     },
   }
 })
-
-// Prisma.UserCreateInput[]
 
 export async function main() {
   try {
