@@ -1,52 +1,38 @@
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient, Prisma } from "@prisma/client"
+import { faker } from "@faker-js/faker"
 
 const prisma = new PrismaClient()
 
-const userData: Prisma.UserCreateInput[] = [
-  {
-    name: 'Alice',
-    email: 'alice@prisma.io',
-    posts: {
-      create: [
-        {
-          title: 'Join the Prisma Slack',
-          content: 'https://slack.prisma.io',
-          published: true,
-        },
-      ],
+const userData = Array.from({ length: 5 + 1 }, (n, i) => i).map(() => {
+  const name = faker.internet.userName()
+
+  return {
+    email: faker.internet.email(),
+    profile: {
+      create: {
+        username: name,
+        name: faker.name.findName(),
+        jobTitle: faker.name.jobTitle(),
+        company: faker.company.companyName(),
+        bio: faker.lorem.paragraphs(3),
+      },
     },
-  },
-  {
-    name: 'Nilu',
-    email: 'nilu@prisma.io',
-    posts: {
-      create: [
-        {
-          title: 'Follow Prisma on Twitter',
-          content: 'https://www.twitter.com/prisma',
-          published: true,
-        },
-      ],
+    paymentDetail: {
+      create: {
+        cardHolderName: name,
+      },
     },
-  },
-  {
-    name: 'Mahmoud',
-    email: 'mahmoud@prisma.io',
-    posts: {
-      create: [
-        {
-          title: 'Ask a question about Prisma on GitHub',
-          content: 'https://www.github.com/prisma/prisma/discussions',
-          published: true,
-        },
-        {
-          title: 'Prisma on YouTube',
-          content: 'https://pris.ly/youtube',
-        },
-      ],
+    notificationSetting: {
+      communicationAlert: true,
+      securityAlert: true,
+      mentionAlert: true,
+      followAlert: true,
+      repliesAlert: true,
     },
-  },
-]
+  }
+})
+
+// Prisma.UserCreateInput[]
 
 export async function main() {
   try {
