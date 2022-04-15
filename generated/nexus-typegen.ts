@@ -178,6 +178,7 @@ export interface NexusGenFieldTypes {
     notificationSettingById: NexusGenRootTypes['NotificationSetting'] | null; // NotificationSetting
     profileById: NexusGenRootTypes['Profile'] | null; // Profile
     profileByUsername: NexusGenRootTypes['Profile'] | null; // Profile
+    showFirstUser: NexusGenRootTypes['User'] | null; // User
     userById: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
@@ -267,6 +268,7 @@ export interface NexusGenFieldTypeNames {
     notificationSettingById: 'NotificationSetting'
     profileById: 'Profile'
     profileByUsername: 'Profile'
+    showFirstUser: 'User'
     userById: 'User'
   }
   User: { // field return type name

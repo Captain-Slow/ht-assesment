@@ -1,15 +1,11 @@
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
+import { ApolloProvider } from "@apollo/client"
 import { ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 import { CacheProvider } from "@emotion/react"
 import { createTheme } from "@mui/material/styles"
 
+import { apolloClient } from "../lib/graphql/apollo-client"
 import createEmotionCache from "../lib/utility/createEmotionCache"
-
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  uri: "/api",
-})
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -17,7 +13,7 @@ export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
           <CssBaseline />

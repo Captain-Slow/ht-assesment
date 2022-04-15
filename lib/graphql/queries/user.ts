@@ -21,5 +21,11 @@ export const UserQuery = extendType({
         })
       },
     })
+    t.field("showFirstUser", {
+      type: "User",
+      resolve: (_, args) => {
+        return prisma.user.findFirst()
+      },
+    })
   },
 })

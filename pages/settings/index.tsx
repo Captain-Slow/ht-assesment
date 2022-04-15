@@ -1,8 +1,8 @@
 import gql from "graphql-tag"
 
-import { apolloClientServerSide } from "../lib/graphql/apollo-client"
+import { apolloClientServerSide } from "../../lib/graphql/apollo-client"
 
-export default function SettingPage() {
+export default function SettingIndexPage() {
   return null
 }
 

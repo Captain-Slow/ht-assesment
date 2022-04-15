@@ -76,6 +76,7 @@ type Query {
   notificationSettingById(notificationSettingId: String!): NotificationSetting
   profileById(profileId: String!): Profile
   profileByUsername(username: String!): Profile
+  showFirstUser: User
   userById(userId: String!): User
 }
 
