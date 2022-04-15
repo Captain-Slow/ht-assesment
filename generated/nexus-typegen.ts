@@ -175,6 +175,8 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     allPlanType: Array<NexusGenRootTypes['PlanType'] | null> | null; // [PlanType]
     allUser: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    notificationSettingById: NexusGenRootTypes['NotificationSetting'] | null; // NotificationSetting
+    profileById: NexusGenRootTypes['Profile'] | null; // Profile
     profileByUsername: NexusGenRootTypes['Profile'] | null; // Profile
     userById: NexusGenRootTypes['User'] | null; // User
   }
@@ -262,6 +264,8 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     allPlanType: 'PlanType'
     allUser: 'User'
+    notificationSettingById: 'NotificationSetting'
+    profileById: 'Profile'
     profileByUsername: 'Profile'
     userById: 'User'
   }
@@ -329,6 +333,12 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    notificationSettingById: { // args
+      notificationSettingId: string; // String!
+    }
+    profileById: { // args
+      profileId: string; // String!
+    }
     profileByUsername: { // args
       username: string; // String!
     }

@@ -31,13 +31,19 @@ export default function MyApp(props) {
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#556cd6",
+      main: "#4f46e5",
+      light: "#eef2ff",
     },
     secondary: {
-      main: "#19857b",
+      main: "#2563eb",
+      light: "#89bbfb",
     },
     error: {
       main: "#ba000d",
+    },
+    divider: "#94a3b8",
+    text: {
+      secondary: "#94a3b8",
     },
   },
 })

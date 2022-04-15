@@ -1,3 +1,24 @@
+https://nexusjs.org/docs/api/args
+https://github.com/graphql-nexus/nexus/issues/122
+
+deep purple
+#4f46e5
+
+super light purple
+#eef2ff
+
+light blue
+#89bbfb
+
+dark blue
+#2563eb
+
+form bg
+#f1f5f9
+
+grey
+#94a3b8
+
 # Fullstack Example with Next.js (GraphQL API)
 
 This example shows how to implement a **fullstack app in TypeScript with [Next.js](https://nextjs.org/)** using [React](https://reactjs.org/), [Apollo Client](https://www.apollographql.com/docs/react/) (frontend), [Nexus Schema](https://nxs.li/components/standalone/schema) and [Prisma Client](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client) (backend). It uses a SQLite database file with some initial dummy data which you can find at [`./prisma/dev.db`](./prisma/dev.db).
@@ -45,7 +66,6 @@ npx prisma migrate dev --name init
 ```
 
 When `npx prisma migrate dev` is executed against a newly created database, seeding is also triggered. The seed file in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will be populated with the sample data.
-
 
 ### 2. Start the app
 
@@ -197,7 +217,6 @@ mutation {
 
 </Details>
 
-
 ## Evolving the app
 
 Evolving the application typically requires three steps:
@@ -339,7 +358,7 @@ const Mutation = objectType({
 +     args: {
 +       email: stringArg(),
 +       bio: stringArg()
-+     }, 
++     },
 +     resolve: async (_, args) => {
 +       return prisma.profile.create({
 +         data: {
@@ -362,10 +381,7 @@ Finally, you can test the new mutation like this:
 
 ```graphql
 mutation {
-  addProfileForUser(
-    email: "mahmoud@prisma.io"
-    bio: "I like turtles"
-  ) {
+  addProfileForUser(email: "mahmoud@prisma.io", bio: "I like turtles") {
     id
     bio
     user {
@@ -385,9 +401,9 @@ Here are some more sample Prisma Client queries on the new <code>Profile</code> 
 ```ts
 const profile = await prisma.profile.create({
   data: {
-    bio: 'Hello World',
+    bio: "Hello World",
     user: {
-      connect: { email: 'alice@prisma.io' },
+      connect: { email: "alice@prisma.io" },
     },
   },
 })
@@ -398,11 +414,11 @@ const profile = await prisma.profile.create({
 ```ts
 const user = await prisma.user.create({
   data: {
-    email: 'john@prisma.io',
-    name: 'John',
+    email: "john@prisma.io",
+    name: "John",
     profile: {
       create: {
-        bio: 'Hello World',
+        bio: "Hello World",
       },
     },
   },
@@ -413,11 +429,11 @@ const user = await prisma.user.create({
 
 ```ts
 const userWithUpdatedProfile = await prisma.user.update({
-  where: { email: 'alice@prisma.io' },
+  where: { email: "alice@prisma.io" },
   data: {
     profile: {
       update: {
-        bio: 'Hello Friends',
+        bio: "Hello Friends",
       },
     },
   },

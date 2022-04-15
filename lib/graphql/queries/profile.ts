@@ -15,5 +15,16 @@ export const ProfileQuery = extendType({
         })
       },
     })
+    t.field("profileById", {
+      type: "Profile",
+      args: {
+        profileId: nonNull(stringArg()),
+      },
+      resolve: (_, args) => {
+        return prisma.profile.findUnique({
+          where: { id: String(args.profileId) },
+        })
+      },
+    })
   },
 })

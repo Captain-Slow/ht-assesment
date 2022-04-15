@@ -73,6 +73,8 @@ type Profile {
 type Query {
   allPlanType: [PlanType]
   allUser: [User]
+  notificationSettingById(notificationSettingId: String!): NotificationSetting
+  profileById(profileId: String!): Profile
   profileByUsername(username: String!): Profile
   userById(userId: String!): User
 }
