@@ -1,7 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "email" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -9,16 +8,20 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Profile" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "name" TEXT,
     "jobTitle" TEXT,
     "company" TEXT,
     "bio" TEXT,
-    "vernacularId" TEXT,
+    "phoneNumber" TEXT,
     "userId" TEXT,
+    "countryId" TEXT,
+    "vernacularId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Profile_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "Country" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT "Profile_vernacularId_fkey" FOREIGN KEY ("vernacularId") REFERENCES "Vernacular" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -74,7 +77,8 @@ CREATE TABLE "NotificationSetting" (
 -- CreateTable
 CREATE TABLE "Country" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "title" TEXT NOT NULL
+    "title" TEXT NOT NULL,
+    "code" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -84,7 +88,7 @@ CREATE TABLE "Vernacular" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "Profile_email_key" ON "Profile"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile_username_key" ON "Profile"("username");

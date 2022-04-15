@@ -1,176 +1,49 @@
 import { ApolloServer } from "apollo-server-micro"
 import { DateTimeResolver } from "graphql-scalars"
 import { NextApiHandler } from "next"
-import {
-  asNexusMethod,
-  makeSchema,
-  nonNull,
-  nullable,
-  objectType,
-  stringArg,
-} from "nexus"
+import { asNexusMethod, makeSchema } from "nexus"
 import path from "path"
 import cors from "micro-cors"
-import prisma from "../../lib/prisma"
+
+import { User } from "../../lib/graphql/types/user"
+import { PaymentDetail } from "../../lib/graphql/types/paymentDetail"
+import { Profile } from "../../lib/graphql/types/profile"
+import { PlanType } from "../../lib/graphql/types/planType"
+import { UserSubscriptionPlan } from "../../lib/graphql/types/userSubscriptionPlan"
+import { NotificationSetting } from "../../lib/graphql/types/notificationSetting"
+import { Country } from "../../lib/graphql/types/country"
+import { Vernacular } from "../../lib/graphql/types/vernacular"
+import { UserQuery } from "../../lib/graphql/queries/user"
+import { PlanTypeQuery } from "../../lib/graphql/queries/planType"
+import { ProfileQuery } from "../../lib/graphql/queries/profile"
+import { UserMutation } from "../../lib/graphql/mutations/user"
+import { ProfileMutation } from "../../lib/graphql/mutations/profile"
+import { UserSubscriptionPlanMutation } from "../../lib/graphql/mutations/userSubscriptionPlan"
+import { PaymentDetailMutation } from "../../lib/graphql/mutations/paymentDetail"
+import { NotificationSettingMutation } from "../../lib/graphql/mutations/notificationSetting"
 
 export const GQLDate = asNexusMethod(DateTimeResolver, "date")
 
-const User = objectType({
-  name: "User",
-  definition(t) {
-    t.string("id")
-    t.string("email")
-    t.nullable.field("profile", {
-      type: "Profile",
-      resolve: parent =>
-        prisma.user
-          .findUnique({
-            where: { id: String(parent.id) },
-          })
-          .profile(),
-    })
-    t.nullable.field("paymentDetail", {
-      type: "PaymentDetail",
-      resolve: parent =>
-        prisma.user
-          .findUnique({
-            where: { id: String(parent.id) },
-          })
-          .paymentDetail(),
-    })
-    t.nullable.field("notificationSetting", {
-      type: "NotificationSetting",
-      resolve: parent =>
-        prisma.user
-          .findUnique({
-            where: { id: String(parent.id) },
-          })
-          .notificationSetting(),
-    })
-  },
-})
-
-const Query = objectType({
-  name: "Query",
-  definition(t) {
-    t.field("post", {
-      type: "Post",
-      args: {
-        postId: nonNull(stringArg()),
-      },
-      resolve: (_, args) => {
-        return prisma.post.findUnique({
-          where: { id: Number(args.postId) },
-        })
-      },
-    })
-
-    t.list.field("feed", {
-      type: "Post",
-      resolve: (_parent, _args) => {
-        return prisma.post.findMany({
-          where: { published: true },
-        })
-      },
-    })
-
-    t.list.field("drafts", {
-      type: "Post",
-      resolve: (_parent, _args, ctx) => {
-        return prisma.post.findMany({
-          where: { published: false },
-        })
-      },
-    })
-
-    t.list.field("filterPosts", {
-      type: "Post",
-      args: {
-        searchString: nullable(stringArg()),
-      },
-      resolve: (_, { searchString }, ctx) => {
-        return prisma.post.findMany({
-          where: {
-            OR: [
-              { title: { contains: searchString } },
-              { content: { contains: searchString } },
-            ],
-          },
-        })
-      },
-    })
-  },
-})
-
-const Mutation = objectType({
-  name: "Mutation",
-  definition(t) {
-    t.field("signupUser", {
-      type: "User",
-      args: {
-        name: stringArg(),
-        email: nonNull(stringArg()),
-      },
-      resolve: (_, { name, email }, ctx) => {
-        return prisma.user.create({
-          data: {
-            name,
-            email,
-          },
-        })
-      },
-    })
-
-    t.nullable.field("deletePost", {
-      type: "Post",
-      args: {
-        postId: stringArg(),
-      },
-      resolve: (_, { postId }, ctx) => {
-        return prisma.post.delete({
-          where: { id: Number(postId) },
-        })
-      },
-    })
-
-    t.field("createDraft", {
-      type: "Post",
-      args: {
-        title: nonNull(stringArg()),
-        content: stringArg(),
-        authorEmail: stringArg(),
-      },
-      resolve: (_, { title, content, authorEmail }, ctx) => {
-        return prisma.post.create({
-          data: {
-            title,
-            content,
-            published: false,
-            author: {
-              connect: { email: authorEmail },
-            },
-          },
-        })
-      },
-    })
-
-    t.nullable.field("publish", {
-      type: "Post",
-      args: {
-        postId: stringArg(),
-      },
-      resolve: (_, { postId }, ctx) => {
-        return prisma.post.update({
-          where: { id: Number(postId) },
-          data: { published: true },
-        })
-      },
-    })
-  },
-})
-
 export const schema = makeSchema({
-  types: [Query, Mutation, Post, User, GQLDate],
+  types: [
+    UserQuery,
+    PlanTypeQuery,
+    ProfileQuery,
+    UserMutation,
+    ProfileMutation,
+    UserSubscriptionPlanMutation,
+    PaymentDetailMutation,
+    NotificationSettingMutation,
+    User,
+    Profile,
+    PaymentDetail,
+    Country,
+    PlanType,
+    NotificationSetting,
+    UserSubscriptionPlan,
+    Vernacular,
+    GQLDate,
+  ],
   outputs: {
     typegen: path.join(process.cwd(), "generated/nexus-typegen.ts"),
     schema: path.join(process.cwd(), "generated/schema.graphql"),

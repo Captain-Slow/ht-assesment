@@ -43,18 +43,64 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Country: { // root type
+    code: string; // String!
+    id: string; // String!
+    title: string; // String!
+  }
   Mutation: {};
-  Post: { // root type
-    content?: string | null; // String
-    id?: number | null; // Int
-    published?: boolean | null; // Boolean
-    title?: string | null; // String
+  NotificationSetting: { // root type
+    communicationAlert: boolean; // Boolean!
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    followAlert: boolean; // Boolean!
+    id: string; // String!
+    itemCommentAlert: boolean; // Boolean!
+    meetupAlert: boolean; // Boolean!
+    mentionAlert: boolean; // Boolean!
+    repliesAlert: boolean; // Boolean!
+    securityAlert: boolean; // Boolean!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  PaymentDetail: { // root type
+    cardCvv?: NexusGenScalars['DateTime'] | null; // DateTime
+    cardExpiryDate?: NexusGenScalars['DateTime'] | null; // DateTime
+    cardHolderName?: string | null; // String
+    cardNumber?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // String!
+  }
+  PlanType: { // root type
+    compoundingPeriod?: string | null; // String
+    description: string; // String!
+    id: string; // String!
+    rate?: number | null; // Float
+    title: string; // String!
+  }
+  Profile: { // root type
+    bio?: string | null; // String
+    company?: string | null; // String
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    email: string; // String!
+    id: string; // String!
+    jobTitle?: string | null; // String
+    name?: string | null; // String
+    phoneNumber?: string | null; // String
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    username?: string | null; // String
   }
   Query: {};
   User: { // root type
-    email?: string | null; // String
-    id?: number | null; // Int
-    name?: string | null; // String
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // String!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  UserSubscriptionPlan: { // root type
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // String!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  Vernacular: { // root type
+    id: string; // String!
+    title: string; // String!
   }
 }
 
@@ -69,85 +115,225 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
-  Mutation: { // field return type
-    createDraft: NexusGenRootTypes['Post'] | null; // Post
-    deletePost: NexusGenRootTypes['Post'] | null; // Post
-    publish: NexusGenRootTypes['Post'] | null; // Post
-    signupUser: NexusGenRootTypes['User'] | null; // User
+  Country: { // field return type
+    code: string; // String!
+    id: string; // String!
+    paymentDetails: Array<NexusGenRootTypes['PaymentDetail'] | null> | null; // [PaymentDetail]
+    title: string; // String!
   }
-  Post: { // field return type
-    author: NexusGenRootTypes['User'] | null; // User
-    content: string | null; // String
-    id: number | null; // Int
-    published: boolean | null; // Boolean
-    title: string | null; // String
+  Mutation: { // field return type
+    signupUser: NexusGenRootTypes['User'] | null; // User
+    updateNotificationSetting: NexusGenRootTypes['NotificationSetting'] | null; // NotificationSetting
+    updatePaymentDetail: NexusGenRootTypes['PaymentDetail'] | null; // PaymentDetail
+    updateProfile: NexusGenRootTypes['Profile'] | null; // Profile
+    updateUserSubscriptionPlan: NexusGenRootTypes['UserSubscriptionPlan'] | null; // UserSubscriptionPlan
+  }
+  NotificationSetting: { // field return type
+    communicationAlert: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    followAlert: boolean; // Boolean!
+    id: string; // String!
+    itemCommentAlert: boolean; // Boolean!
+    meetupAlert: boolean; // Boolean!
+    mentionAlert: boolean; // Boolean!
+    repliesAlert: boolean; // Boolean!
+    securityAlert: boolean; // Boolean!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    user: NexusGenRootTypes['User'] | null; // User
+  }
+  PaymentDetail: { // field return type
+    cardCvv: NexusGenScalars['DateTime'] | null; // DateTime
+    cardExpiryDate: NexusGenScalars['DateTime'] | null; // DateTime
+    cardHolderName: string | null; // String
+    cardNumber: NexusGenScalars['DateTime'] | null; // DateTime
+    country: NexusGenRootTypes['Country'] | null; // Country
+    id: string; // String!
+    user: NexusGenRootTypes['User'] | null; // User
+  }
+  PlanType: { // field return type
+    compoundingPeriod: string | null; // String
+    description: string; // String!
+    id: string; // String!
+    rate: number | null; // Float
+    title: string; // String!
+    userSubscriptionPlans: Array<NexusGenRootTypes['UserSubscriptionPlan'] | null> | null; // [UserSubscriptionPlan]
+  }
+  Profile: { // field return type
+    bio: string | null; // String
+    company: string | null; // String
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    email: string; // String!
+    id: string; // String!
+    jobTitle: string | null; // String
+    name: string | null; // String
+    phoneNumber: string | null; // String
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    user: NexusGenRootTypes['User'] | null; // User
+    username: string | null; // String
+    vernacular: NexusGenRootTypes['Vernacular'] | null; // Vernacular
   }
   Query: { // field return type
-    drafts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
-    feed: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
-    filterPosts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
-    post: NexusGenRootTypes['Post'] | null; // Post
+    allPlanType: Array<NexusGenRootTypes['PlanType'] | null> | null; // [PlanType]
+    allUser: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    profileByUsername: NexusGenRootTypes['Profile'] | null; // Profile
+    userById: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
-    email: string | null; // String
-    id: number | null; // Int
-    name: string | null; // String
-    posts: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // String!
+    notificationSetting: NexusGenRootTypes['NotificationSetting'] | null; // NotificationSetting
+    paymentDetail: NexusGenRootTypes['PaymentDetail'] | null; // PaymentDetail
+    profile: NexusGenRootTypes['Profile'] | null; // Profile
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    userSubscriptionPlan: NexusGenRootTypes['UserSubscriptionPlan'] | null; // UserSubscriptionPlan
+  }
+  UserSubscriptionPlan: { // field return type
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // String!
+    planType: NexusGenRootTypes['PlanType']; // PlanType!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    user: NexusGenRootTypes['User']; // User!
+  }
+  Vernacular: { // field return type
+    id: string; // String!
+    profiles: Array<NexusGenRootTypes['Profile'] | null> | null; // [Profile]
+    title: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
-  Mutation: { // field return type name
-    createDraft: 'Post'
-    deletePost: 'Post'
-    publish: 'Post'
-    signupUser: 'User'
-  }
-  Post: { // field return type name
-    author: 'User'
-    content: 'String'
-    id: 'Int'
-    published: 'Boolean'
+  Country: { // field return type name
+    code: 'String'
+    id: 'String'
+    paymentDetails: 'PaymentDetail'
     title: 'String'
   }
+  Mutation: { // field return type name
+    signupUser: 'User'
+    updateNotificationSetting: 'NotificationSetting'
+    updatePaymentDetail: 'PaymentDetail'
+    updateProfile: 'Profile'
+    updateUserSubscriptionPlan: 'UserSubscriptionPlan'
+  }
+  NotificationSetting: { // field return type name
+    communicationAlert: 'Boolean'
+    createdAt: 'DateTime'
+    followAlert: 'Boolean'
+    id: 'String'
+    itemCommentAlert: 'Boolean'
+    meetupAlert: 'Boolean'
+    mentionAlert: 'Boolean'
+    repliesAlert: 'Boolean'
+    securityAlert: 'Boolean'
+    updatedAt: 'DateTime'
+    user: 'User'
+  }
+  PaymentDetail: { // field return type name
+    cardCvv: 'DateTime'
+    cardExpiryDate: 'DateTime'
+    cardHolderName: 'String'
+    cardNumber: 'DateTime'
+    country: 'Country'
+    id: 'String'
+    user: 'User'
+  }
+  PlanType: { // field return type name
+    compoundingPeriod: 'String'
+    description: 'String'
+    id: 'String'
+    rate: 'Float'
+    title: 'String'
+    userSubscriptionPlans: 'UserSubscriptionPlan'
+  }
+  Profile: { // field return type name
+    bio: 'String'
+    company: 'String'
+    createdAt: 'DateTime'
+    email: 'String'
+    id: 'String'
+    jobTitle: 'String'
+    name: 'String'
+    phoneNumber: 'String'
+    updatedAt: 'DateTime'
+    user: 'User'
+    username: 'String'
+    vernacular: 'Vernacular'
+  }
   Query: { // field return type name
-    drafts: 'Post'
-    feed: 'Post'
-    filterPosts: 'Post'
-    post: 'Post'
+    allPlanType: 'PlanType'
+    allUser: 'User'
+    profileByUsername: 'Profile'
+    userById: 'User'
   }
   User: { // field return type name
-    email: 'String'
-    id: 'Int'
-    name: 'String'
-    posts: 'Post'
+    createdAt: 'DateTime'
+    id: 'String'
+    notificationSetting: 'NotificationSetting'
+    paymentDetail: 'PaymentDetail'
+    profile: 'Profile'
+    updatedAt: 'DateTime'
+    userSubscriptionPlan: 'UserSubscriptionPlan'
+  }
+  UserSubscriptionPlan: { // field return type name
+    createdAt: 'DateTime'
+    id: 'String'
+    planType: 'PlanType'
+    updatedAt: 'DateTime'
+    user: 'User'
+  }
+  Vernacular: { // field return type name
+    id: 'String'
+    profiles: 'Profile'
+    title: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    createDraft: { // args
-      authorEmail?: string | null; // String
-      content?: string | null; // String
-      title: string; // String!
-    }
-    deletePost: { // args
-      postId?: string | null; // String
-    }
-    publish: { // args
-      postId?: string | null; // String
-    }
     signupUser: { // args
       email: string; // String!
-      name?: string | null; // String
+      username: string; // String!
+    }
+    updateNotificationSetting: { // args
+      communicationAlert: boolean; // Boolean!
+      followAlert: boolean; // Boolean!
+      itemCommentAlert: boolean; // Boolean!
+      meetupAlert: boolean; // Boolean!
+      mentionAlert: boolean; // Boolean!
+      notificationSettingId: string; // String!
+      repliesAlert: boolean; // Boolean!
+      securityAlert: boolean; // Boolean!
+    }
+    updatePaymentDetail: { // args
+      cardExpiryDate: string; // String!
+      cardHolderName: string; // String!
+      cardNumber: string; // String!
+      countryId: string; // String!
+      paymentDetaild: string; // String!
+    }
+    updateProfile: { // args
+      bio: string; // String!
+      company: string; // String!
+      countryId: string; // String!
+      email: string; // String!
+      jobTitle: string; // String!
+      name: string; // String!
+      phoneNumber: string; // String!
+      profileId: string; // String!
+      username: string; // String!
+      vernacularId: string; // String!
+    }
+    updateUserSubscriptionPlan: { // args
+      planTypeId: string; // String!
+      userSubscriptionPlanId: string; // String!
     }
   }
   Query: {
-    filterPosts: { // args
-      searchString?: string | null; // String
+    profileByUsername: { // args
+      username: string; // String!
     }
-    post: { // args
-      postId: string; // String!
+    userById: { // args
+      userId: string; // String!
     }
   }
 }

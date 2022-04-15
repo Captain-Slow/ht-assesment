@@ -1,6 +1,7 @@
 import { PrismaClient, Prisma } from "@prisma/client"
 import { faker } from "@faker-js/faker"
 import moment from "moment"
+import * as dummyData from "../lib/json/dummyData"
 
 const prisma = new PrismaClient()
 
@@ -46,6 +47,19 @@ export async function main() {
       })
     )
 
+    await Promise.all(
+      Object.keys(dummyData.COUNTRIES).map(async countryCode => {
+        const specificData = dummyData.COUNTRIES[countryCode]
+
+        return prisma.country.create({
+          data: {
+            title: specificData,
+            code: countryCode,
+          },
+        })
+      })
+    )
+
     const userData: Prisma.UserCreateInput[] = Array.from(
       { length: 5 + 1 },
       (n, i) => i
@@ -53,14 +67,26 @@ export async function main() {
       const name = faker.name.findName()
 
       return {
-        email: faker.internet.email(),
         profile: {
           create: {
             username: faker.internet.userName(),
+            email: faker.internet.email(),
             name: name,
             jobTitle: faker.name.jobTitle(),
             company: faker.company.companyName(),
+            phoneNumber: faker.phone.phoneNumberFormat(),
             bio: faker.lorem.paragraphs(3),
+            country: {
+              connectOrCreate: {
+                where: {
+                  title: "Malaysia",
+                },
+                create: {
+                  title: "Malaysia",
+                  code: "MY",
+                },
+              },
+            },
             vernacular: {
               connectOrCreate: {
                 where: {
@@ -86,6 +112,7 @@ export async function main() {
                 },
                 create: {
                   title: "Malaysia",
+                  code: "MY",
                 },
               },
             },

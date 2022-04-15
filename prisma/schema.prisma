@@ -10,7 +10,6 @@ datasource db {
 
 model User {
   id                   String                @id @default(uuid())
-  email                String                @unique
   profile              Profile?
   paymentDetail        PaymentDetail?
   notificationSetting  NotificationSetting?
@@ -21,15 +20,19 @@ model User {
 
 model Profile {
   id           String      @id @default(uuid())
+  email        String      @unique
   username     String      @unique
   name         String?
   jobTitle     String?
   company      String?
   bio          String?
+  phoneNumber  String?
   user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String?     @unique
+  country      Country?    @relation(fields: [countryId], references: [id])
+  countryId    String?
   vernacular   Vernacular? @relation(fields: [vernacularId], references: [id])
   vernacularId String?
-  userId       String?     @unique
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 }
@@ -83,7 +86,9 @@ model NotificationSetting {
 model Country {
   id             String          @id @default(uuid())
   title          String          @unique
+  code           String
   paymentDetails PaymentDetail[]
+  profiles       Profile[]
 }
 
 model Vernacular {
