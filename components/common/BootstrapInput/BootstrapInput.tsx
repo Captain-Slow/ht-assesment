@@ -22,7 +22,7 @@ export default function BootstrapInput({
   return (
     <FormControl fullWidth variant="standard" {...formControlProps}>
       <StyledLabel shrink>{label}</StyledLabel>
-      <StyledInput {...inputBaseProps} />
+      <StyledInput autoComplete="chrome-off" {...inputBaseProps} />
       {helperText !== undefined && helperText !== null && helperText !== "" && (
         <FormHelperText>{`${helperText}`}</FormHelperText>
       )}

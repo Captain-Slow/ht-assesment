@@ -61,7 +61,7 @@ export async function main() {
     )
 
     await Promise.all(
-      ["English", "Chinese", "Bahasa Malaysia"].map(async item => {
+      ["English", "Chinese", "Malay", "Japanese", "Korean"].map(async item => {
         return prisma.vernacular.create({
           data: {
             title: item,
@@ -84,7 +84,8 @@ export async function main() {
             name: name,
             jobTitle: faker.name.jobTitle(),
             company: faker.company.companyName(),
-            phoneNumber: faker.phone.phoneNumberFormat(),
+            // phoneNumber: faker.phone.phoneNumberFormat(),
+            phoneNumber: "",
             bio: faker.lorem.paragraphs(3),
             country: {
               connectOrCreate: {

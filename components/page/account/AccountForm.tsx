@@ -196,7 +196,7 @@ export default function AccountForm({
                   startAdornment: (
                     <InputAdornment
                       position="start"
-                      sx={{ mr: 2, width: "127px" }}
+                      sx={{ width: "128px", minWidth: "128px" }}
                     >
                       <Box sx={css.usernameInputAdornment}>
                         <Box sx={css.usernameInputAdornmentCaption}>
@@ -332,7 +332,7 @@ export default function AccountForm({
                 inputBaseProps={{
                   value: values["phoneNumber"],
                   onBlur: handleBlur,
-                  placeholder: "Your name",
+                  placeholder: "Your phone number",
                   size: "small",
                   onChange: handleChange,
                   name: "phoneNumber",
@@ -341,6 +341,7 @@ export default function AccountForm({
                       <PhoneIcon fontSize="small" sx={css.iconColor} />
                     </InputAdornment>
                   ),
+                  type: "number",
                 }}
                 formControlProps={{
                   error: "phoneNumber" in errors,
@@ -477,10 +478,18 @@ const FormSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   username: Yup.string().required("Username is required"),
   jobTitle: Yup.string().required("Job title is required"),
-  company: Yup.string().required("Current employer name is required"),
-  bio: Yup.string().required("Your bio is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
-  email: Yup.string().email().required("Email is required"),
+  company: Yup.string(),
+  bio: Yup.string(),
+  phoneNumber: Yup.string().test(
+    "Digits only",
+    "Phone number should have digits only",
+    value => {
+      return value === "" || value === undefined ? true : /^\d+$/.test(value)
+    }
+  ),
+  email: Yup.string()
+    .email("Email must be a valid email")
+    .required("Email is required"),
   countryId: Yup.string().required("Please select a country"),
   vernacularId: Yup.string().required("Please select a language"),
 })
@@ -498,7 +507,7 @@ const css: CSSObject = {
   usernameInputAdornment: {
     bgcolor: "#eef2ff",
     borderRight: "1px solid",
-    borderRightColor: "text.secondary",
+    borderRightColor: "#ced4da",
     px: 2,
     position: "absolute",
     top: 0,

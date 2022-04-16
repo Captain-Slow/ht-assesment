@@ -2,7 +2,6 @@ import React from "react"
 import { useRouter } from "next/router"
 import {
   Box,
-  Card,
   List,
   ListItem,
   ListItemIcon,
@@ -18,6 +17,7 @@ import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined"
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"
 
 import { CaptionText } from "../common"
+import useWidth from "../../lib/hooks/useWidth"
 
 interface propTypes {
   children: React.ReactNode
@@ -27,6 +27,7 @@ interface propTypes {
 
 export default function SettingLayout({ children, page, userId }: propTypes) {
   const router = useRouter()
+  const width = useWidth()
 
   const navItemOnClick = (navItem: string) => {
     switch (navItem) {
@@ -42,22 +43,26 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
     }
   }
 
+  const smallerLayout = width === "sm" || width === "xs"
+
   return (
-    <Container maxWidth="xl" sx={css.container}>
-      <Card sx={css.cardContainer} variant="outlined">
+    <Container maxWidth="xl" disableGutters>
+      <Box sx={css.cardContainer}>
         <Grid container wrap="nowrap">
-          <Grid item sx={css.navContainer}>
-            <Box sx={css.navWrapper}>
-              <Typography
-                variant="h4"
-                variantMapping={{
-                  h4: "h1",
-                }}
-                sx={css.title}
-              >
-                Settings
-              </Typography>
-            </Box>
+          <Grid item sx={!smallerLayout ? css.navContainer : {}}>
+            {!smallerLayout && (
+              <Box sx={css.navWrapper}>
+                <Typography
+                  variant="h4"
+                  variantMapping={{
+                    h4: "h1",
+                  }}
+                  sx={css.title}
+                >
+                  Settings
+                </Typography>
+              </Box>
+            )}
             <Divider />
             <List sx={css.list}>
               {navItems.map((navItem, index) => {
@@ -72,12 +77,23 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
                 return (
                   <React.Fragment key={index}>
                     <ListItem
-                      sx={selected ? css.listItemSelected : css.listItem}
+                      sx={[
+                        selected ? css.listItemSelected : css.listItem,
+                        !smallerLayout
+                          ? css.sharedListItemStyle
+                          : css.smallerSharedListItemStyle,
+                      ]}
                       button
                       alignItems="flex-start"
                       onClick={() => navItemOnClick(navItem.title)}
                     >
-                      <ListItemIcon sx={css.iconContainer}>
+                      <ListItemIcon
+                        sx={
+                          !smallerLayout
+                            ? css.iconContainer
+                            : css.smallerIconContainer
+                        }
+                      >
                         {navItem.title === "Account" ? (
                           <AccountCircleOutlinedIcon
                             fontSize="small"
@@ -95,25 +111,27 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
                           />
                         )}
                       </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Typography
-                            variant="body2"
-                            color="text.primary"
-                            sx={
-                              selected
-                                ? css.selectedPrimaryText
-                                : css.primaryText
-                            }
-                          >
-                            {navItem.title}
-                          </Typography>
-                        }
-                        secondary={<CaptionText>{navItem.desc}</CaptionText>}
-                        secondaryTypographyProps={{
-                          component: "div",
-                        }}
-                      />
+                      {!smallerLayout && (
+                        <ListItemText
+                          primary={
+                            <Typography
+                              variant="body2"
+                              color="text.primary"
+                              sx={
+                                selected
+                                  ? css.selectedPrimaryText
+                                  : css.primaryText
+                              }
+                            >
+                              {navItem.title}
+                            </Typography>
+                          }
+                          secondary={<CaptionText>{navItem.desc}</CaptionText>}
+                          secondaryTypographyProps={{
+                            component: "div",
+                          }}
+                        />
+                      )}
                     </ListItem>
                     <Divider component="li" />
                   </React.Fragment>
@@ -121,17 +139,43 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
               })}
             </List>
           </Grid>
-          <Grid item sx={css.contentContainer}>
+          <Grid
+            item
+            sx={
+              !smallerLayout
+                ? css.contentContainer
+                : css.smallerContentContainer
+            }
+          >
+            {smallerLayout && (
+              <Box sx={css.smallerNavWrapper}>
+                <Typography
+                  variant="h4"
+                  variantMapping={{
+                    h4: "h1",
+                  }}
+                  sx={css.title}
+                >
+                  Settings
+                </Typography>
+                <Box
+                  sx={{
+                    mt: 2,
+                  }}
+                >
+                  <Divider />
+                </Box>
+              </Box>
+            )}
             <Box sx={css.contentWrapper}>{children}</Box>
           </Grid>
         </Grid>
-      </Card>
+      </Box>
     </Container>
   )
 }
 
 const css: CSSObject = {
-  container: {},
   cardContainer: {
     borderRadius: 0,
     minHeight: "100vh",
@@ -139,6 +183,9 @@ const css: CSSObject = {
   iconContainer: {
     minWidth: "auto",
     mr: 1.5,
+  },
+  smallerIconContainer: {
+    minWidth: "auto",
   },
   icon: {
     color: "text.secondary",
@@ -155,6 +202,9 @@ const css: CSSObject = {
     my: 4,
     mx: 3,
   },
+  smallerNavWrapper: {
+    mb: 4,
+  },
   navDescText: {
     mt: 0.5,
     lineHeight: 1.43,
@@ -162,6 +212,10 @@ const css: CSSObject = {
   list: {
     width: "100%",
     pt: 0,
+  },
+  sharedListItemStyle: {},
+  smallerSharedListItemStyle: {
+    px: 2,
   },
   listItem: {
     px: 3,
@@ -186,6 +240,13 @@ const css: CSSObject = {
     pt: 4,
     pb: 6,
     px: 5,
+    flex: 1,
+  },
+  smallerContentContainer: {
+    bgcolor: "#f1f5f9",
+    pt: 4,
+    pb: 6,
+    px: 3.5,
     flex: 1,
   },
   contentWrapper: {},
