@@ -1,10 +1,17 @@
 import gql from "graphql-tag"
+import { Box, Typography } from "@mui/material"
 
 import { apolloClientServerSide } from "../../../lib/graphql/apollo-client"
+import SettingLayout from "../../../components/SettingLayout"
 
 export default function UserSettingsAccountPage({ user }) {
-  console.log(user)
-  return <div></div>
+  return (
+    <Box>
+      <SettingLayout page="account" userId={user.id}>
+        <Box></Box>
+      </SettingLayout>
+    </Box>
+  )
 }
 
 export async function getServerSideProps({ query }) {

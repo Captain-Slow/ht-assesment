@@ -37,7 +37,7 @@ const theme = createTheme({
     error: {
       main: "#ba000d",
     },
-    divider: "#94a3b8",
+    // divider: "#94a3b8",
     text: {
       secondary: "#94a3b8",
     },
