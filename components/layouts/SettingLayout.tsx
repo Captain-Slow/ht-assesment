@@ -17,6 +17,8 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined"
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined"
 
+import { CaptionText } from "../common"
+
 interface propTypes {
   children: React.ReactNode
   page: "account" | "billing" | "notifications"
@@ -107,18 +109,10 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
                             {navItem.title}
                           </Typography>
                         }
-                        secondary={
-                          <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            sx={css.navDescText}
-                            variantMapping={{
-                              caption: "p",
-                            }}
-                          >
-                            {navItem.desc}
-                          </Typography>
-                        }
+                        secondary={<CaptionText>{navItem.desc}</CaptionText>}
+                        secondaryTypographyProps={{
+                          component: "div",
+                        }}
                       />
                     </ListItem>
                     <Divider component="li" />
@@ -127,8 +121,8 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
               })}
             </List>
           </Grid>
-          <Grid item>
-            <Box>{children}</Box>
+          <Grid item sx={css.contentContainer}>
+            <Box sx={css.contentWrapper}>{children}</Box>
           </Grid>
         </Grid>
       </Card>
@@ -187,6 +181,13 @@ const css: CSSObject = {
     fontWeight: "700",
     fontSize: "1.85rem",
   },
+  contentContainer: {
+    bgcolor: "#f1f5f9",
+    py: 4,
+    px: 5,
+    flex: 1,
+  },
+  contentWrapper: {},
 }
 
 const navItems = [

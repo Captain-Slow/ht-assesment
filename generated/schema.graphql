@@ -6,6 +6,7 @@ type Country {
   code: String!
   id: String!
   paymentDetails: [PaymentDetail]
+  profiles: [Profile]
   title: String!
 }
 
@@ -58,6 +59,7 @@ type PlanType {
 type Profile {
   bio: String
   company: String
+  country: Country
   createdAt: DateTime
   email: String!
   id: String!

@@ -30,6 +30,15 @@ export const Profile = objectType({
           })
           .vernacular(),
     })
+    t.nullable.field("country", {
+      type: "Country",
+      resolve: parent =>
+        prisma.profile
+          .findUnique({
+            where: { id: String(parent.id) },
+          })
+          .country(),
+    })
     t.date("createdAt")
     t.date("updatedAt")
   },

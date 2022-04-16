@@ -16,5 +16,14 @@ export const Country = objectType({
           })
           .paymentDetails(),
     })
+    t.list.field("profiles", {
+      type: "Profile",
+      resolve: parent =>
+        prisma.country
+          .findUnique({
+            where: { id: String(parent.id) },
+          })
+          .profiles(),
+    })
   },
 })

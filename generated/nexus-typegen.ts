@@ -119,6 +119,7 @@ export interface NexusGenFieldTypes {
     code: string; // String!
     id: string; // String!
     paymentDetails: Array<NexusGenRootTypes['PaymentDetail'] | null> | null; // [PaymentDetail]
+    profiles: Array<NexusGenRootTypes['Profile'] | null> | null; // [Profile]
     title: string; // String!
   }
   Mutation: { // field return type
@@ -161,6 +162,7 @@ export interface NexusGenFieldTypes {
   Profile: { // field return type
     bio: string | null; // String
     company: string | null; // String
+    country: NexusGenRootTypes['Country'] | null; // Country
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     email: string; // String!
     id: string; // String!
@@ -209,6 +211,7 @@ export interface NexusGenFieldTypeNames {
     code: 'String'
     id: 'String'
     paymentDetails: 'PaymentDetail'
+    profiles: 'Profile'
     title: 'String'
   }
   Mutation: { // field return type name
@@ -251,6 +254,7 @@ export interface NexusGenFieldTypeNames {
   Profile: { // field return type name
     bio: 'String'
     company: 'String'
+    country: 'Country'
     createdAt: 'DateTime'
     email: 'String'
     id: 'String'

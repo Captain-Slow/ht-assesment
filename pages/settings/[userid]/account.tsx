@@ -1,14 +1,20 @@
 import gql from "graphql-tag"
-import { Box, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 
 import { apolloClientServerSide } from "../../../lib/graphql/apollo-client"
-import SettingLayout from "../../../components/SettingLayout"
+import SettingLayout from "../../../components/layouts/SettingLayout"
+import AccountForm from "../../../components/page/account/AccountForm"
+import { BASIC_USER_DATA_TYPE } from "../../../lib/data/types/user"
 
-export default function UserSettingsAccountPage({ user }) {
+interface propTypes {
+  user: BASIC_USER_DATA_TYPE
+}
+
+export default function UserSettingsAccountPage({ user }: propTypes) {
   return (
     <Box>
       <SettingLayout page="account" userId={user.id}>
-        <Box></Box>
+        <AccountForm userData={user} />
       </SettingLayout>
     </Box>
   )
@@ -37,6 +43,10 @@ export async function getServerSideProps({ query }) {
               vernacular {
                 id
               }
+              country {
+                id
+              }
+              phoneNumber
             }
           }
         }
@@ -55,7 +65,7 @@ export async function getServerSideProps({ query }) {
     return {
       redirect: {
         permanent: true,
-        destination: `/500`,
+        destination: `/404`,
       },
       props: {},
     }
