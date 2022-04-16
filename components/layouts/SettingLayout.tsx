@@ -183,7 +183,8 @@ const css: CSSObject = {
   },
   contentContainer: {
     bgcolor: "#f1f5f9",
-    py: 4,
+    pt: 4,
+    pb: 6,
     px: 5,
     flex: 1,
   },

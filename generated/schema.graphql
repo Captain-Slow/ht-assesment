@@ -73,8 +73,10 @@ type Profile {
 }
 
 type Query {
+  allCountry: [Country]
   allPlanType: [PlanType]
   allUser: [User]
+  allVernacular: [Vernacular]
   notificationSettingById(notificationSettingId: String!): NotificationSetting
   profileById(profileId: String!): Profile
   profileByUsername(username: String!): Profile

@@ -175,8 +175,10 @@ export interface NexusGenFieldTypes {
     vernacular: NexusGenRootTypes['Vernacular'] | null; // Vernacular
   }
   Query: { // field return type
+    allCountry: Array<NexusGenRootTypes['Country'] | null> | null; // [Country]
     allPlanType: Array<NexusGenRootTypes['PlanType'] | null> | null; // [PlanType]
     allUser: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    allVernacular: Array<NexusGenRootTypes['Vernacular'] | null> | null; // [Vernacular]
     notificationSettingById: NexusGenRootTypes['NotificationSetting'] | null; // NotificationSetting
     profileById: NexusGenRootTypes['Profile'] | null; // Profile
     profileByUsername: NexusGenRootTypes['Profile'] | null; // Profile
@@ -267,8 +269,10 @@ export interface NexusGenFieldTypeNames {
     vernacular: 'Vernacular'
   }
   Query: { // field return type name
+    allCountry: 'Country'
     allPlanType: 'PlanType'
     allUser: 'User'
+    allVernacular: 'Vernacular'
     notificationSettingById: 'NotificationSetting'
     profileById: 'Profile'
     profileByUsername: 'Profile'

@@ -1,4 +1,5 @@
-import { useEffect } from "react"
+import gql from "graphql-tag"
+import { useMutation } from "@apollo/client"
 import {
   Box,
   Typography,
@@ -6,6 +7,7 @@ import {
   InputAdornment,
   Divider,
   MenuItem,
+  Stack,
 } from "@mui/material"
 import { CSSObject } from "@mui/material/styles"
 import { useFormik } from "formik"
@@ -17,6 +19,7 @@ import BusinessIcon from "@mui/icons-material/Business"
 import EmailIcon from "@mui/icons-material/Email"
 import PhoneIcon from "@mui/icons-material/Phone"
 import FmdGoodIcon from "@mui/icons-material/FmdGood"
+import { SelectChangeEvent } from "@mui/material/Select"
 
 import { BASIC_USER_DATA_TYPE } from "../../../lib/data/types/user"
 import {
@@ -24,10 +27,16 @@ import {
   SectionTitle,
   BootstrapInput,
   BootstrapSelect,
+  OutlinedButton,
+  FilledButton,
 } from "../../common"
+import { COUNTRY_LIST_TYPE } from "../../../lib/data/types/country"
+import { VERNACULAR_LIST_TYPE } from "../../../lib/data/types/vernacular"
 
 interface propTypes {
   userData: BASIC_USER_DATA_TYPE
+  countryData: COUNTRY_LIST_TYPE
+  vernacularData: VERNACULAR_LIST_TYPE
 }
 
 interface formikValues {
@@ -42,12 +51,51 @@ interface formikValues {
   vernacularId: string
 }
 
-export default function AccountForm({ userData }: propTypes) {
+export default function AccountForm({
+  userData,
+  countryData,
+  vernacularData,
+}: propTypes) {
+  const [updateProfile, { loading, error, data }] = useMutation(
+    UpdateUserProfileMutation,
+    { errorPolicy: "all" }
+  )
+
   const { enqueueSnackbar } = useSnackbar()
 
-  console.log(userData)
   const onFormSubmit = async (values: formikValues) => {
     try {
+      const {
+        username,
+        jobTitle,
+        company,
+        bio,
+        phoneNumber,
+        email,
+        countryId,
+        vernacularId,
+      } = values
+
+      const fullName = values.name
+
+      await updateProfile({
+        variables: {
+          profileId: userData.profile.id,
+          name: fullName,
+          username,
+          jobTitle,
+          company,
+          bio,
+          phoneNumber,
+          email,
+          countryId,
+          vernacularId,
+        },
+      })
+
+      enqueueSnackbar("Profile and personal information updated", {
+        variant: "success",
+      })
     } catch (e) {
       enqueueSnackbar("Error submitting", {
         variant: "error",
@@ -80,7 +128,16 @@ export default function AccountForm({ userData }: propTypes) {
     handleBlur,
     handleSubmit,
     isSubmitting,
+    setFieldValue,
   } = formFormik
+
+  const countryOnChange = (event: SelectChangeEvent) => {
+    setFieldValue("countryId", event.target.value as string)
+  }
+
+  const languageOnChange = (event: SelectChangeEvent) => {
+    setFieldValue("vernacularId", event.target.value as string)
+  }
 
   return (
     <Box>
@@ -297,11 +354,11 @@ export default function AccountForm({ userData }: propTypes) {
               <BootstrapSelect
                 label="Country"
                 selectProps={{
-                  value: values["country"],
+                  value: values["countryId"],
                   onBlur: handleBlur,
                   size: "small",
-                  // onChange: handleChange,
-                  name: "country",
+                  onChange: countryOnChange,
+                  name: "countryId",
                   startAdornment: (
                     <InputAdornment position="start" sx={{ mr: 1.5 }}>
                       <FmdGoodIcon fontSize="small" sx={css.iconColor} />
@@ -309,17 +366,112 @@ export default function AccountForm({ userData }: propTypes) {
                   ),
                 }}
                 formControlProps={{
-                  error: "country" in errors,
+                  error: "countryId" in errors,
                 }}
-                helperText={"country" in errors ? errors["country"] : ""}
-              />
+                helperText={"countryId" in errors ? errors["countryId"] : ""}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {Object.keys(countryData).map(countryId => {
+                  const specificCountryData = countryData[countryId]
+
+                  return (
+                    <MenuItem key={countryId} value={countryId}>
+                      {specificCountryData.title}
+                    </MenuItem>
+                  )
+                })}
+              </BootstrapSelect>
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <BootstrapSelect
+                label="Language"
+                selectProps={{
+                  value: values["vernacularId"],
+                  onBlur: handleBlur,
+                  size: "small",
+                  onChange: languageOnChange,
+                  name: "vernacularId",
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ mr: 1.5 }}>
+                      <FmdGoodIcon fontSize="small" sx={css.iconColor} />
+                    </InputAdornment>
+                  ),
+                }}
+                formControlProps={{
+                  error: "vernacularId" in errors,
+                }}
+                helperText={
+                  "vernacularId" in errors ? errors["vernacularId"] : ""
+                }
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {Object.keys(vernacularData).map(vernacularId => {
+                  const specificVernacularData = vernacularData[vernacularId]
+
+                  return (
+                    <MenuItem key={vernacularId} value={vernacularId}>
+                      {specificVernacularData.title}
+                    </MenuItem>
+                  )
+                })}
+              </BootstrapSelect>
             </Grid>
           </Grid>
+        </Box>
+        <Box sx={css.dividerContainer}>
+          <Divider />
+        </Box>
+        <Box>
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <OutlinedButton>Cancel</OutlinedButton>
+            <FilledButton
+              buttonProps={{
+                type: "submit",
+                disabled: isSubmitting,
+              }}
+            >
+              Save
+            </FilledButton>
+          </Stack>
         </Box>
       </form>
     </Box>
   )
 }
+
+const UpdateUserProfileMutation = gql`
+  mutation UpdateUserProfileMutation(
+    $profileId: String!
+    $name: String!
+    $username: String!
+    $jobTitle: String!
+    $company: String!
+    $bio: String!
+    $phoneNumber: String!
+    $email: String!
+    $countryId: String!
+    $vernacularId: String!
+  ) {
+    updateProfile(
+      profileId: $profileId
+      name: $name
+      username: $username
+      jobTitle: $jobTitle
+      company: $company
+      bio: $bio
+      phoneNumber: $phoneNumber
+      email: $email
+      countryId: $countryId
+      vernacularId: $vernacularId
+    ) {
+      id
+    }
+  }
+`
 
 const FormSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),

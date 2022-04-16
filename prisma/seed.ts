@@ -60,6 +60,16 @@ export async function main() {
       })
     )
 
+    await Promise.all(
+      ["English", "Chinese", "Bahasa Malaysia"].map(async item => {
+        return prisma.vernacular.create({
+          data: {
+            title: item,
+          },
+        })
+      })
+    )
+
     const userData: Prisma.UserCreateInput[] = Array.from(
       { length: 5 + 1 },
       (n, i) => i
@@ -90,10 +100,10 @@ export async function main() {
             vernacular: {
               connectOrCreate: {
                 where: {
-                  title: "Malaysia",
+                  title: "English",
                 },
                 create: {
-                  title: "Malaysia",
+                  title: "English",
                 },
               },
             },

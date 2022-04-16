@@ -21,6 +21,9 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
       "background-color",
       "box-shadow",
     ]),
+    "&:focus": {
+      backgroundColor: "white",
+    },
   },
   "& .MuiAutocomplete-endAdornment": {
     marginRight: 8,

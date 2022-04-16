@@ -17,6 +17,8 @@ import { UserQuery } from "../../lib/graphql/queries/user"
 import { PlanTypeQuery } from "../../lib/graphql/queries/planType"
 import { ProfileQuery } from "../../lib/graphql/queries/profile"
 import { NotificationSettingQuery } from "../../lib/graphql/queries/notificationSetting"
+import { CountryQuery } from "../../lib/graphql/queries/country"
+import { VernacularQuery } from "../../lib/graphql/queries/vernacular"
 import { UserMutation } from "../../lib/graphql/mutations/user"
 import { ProfileMutation } from "../../lib/graphql/mutations/profile"
 import { UserSubscriptionPlanMutation } from "../../lib/graphql/mutations/userSubscriptionPlan"
@@ -31,6 +33,8 @@ export const schema = makeSchema({
     PlanTypeQuery,
     ProfileQuery,
     NotificationSettingQuery,
+    CountryQuery,
+    VernacularQuery,
     UserMutation,
     ProfileMutation,
     UserSubscriptionPlanMutation,
