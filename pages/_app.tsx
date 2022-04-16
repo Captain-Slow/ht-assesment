@@ -3,6 +3,8 @@ import { ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 import { CacheProvider } from "@emotion/react"
 import { createTheme } from "@mui/material/styles"
+import { SnackbarProvider } from "notistack"
+import { Zoom } from "@mui/material"
 
 import { apolloClient } from "../lib/graphql/apollo-client"
 import createEmotionCache from "../lib/utility/createEmotionCache"
@@ -17,7 +19,17 @@ export default function MyApp(props) {
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Component {...pageProps} />
+          <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            TransitionComponent={Zoom}
+            dense
+          >
+            <Component {...pageProps} />
+          </SnackbarProvider>
         </ThemeProvider>
       </CacheProvider>
     </ApolloProvider>
