@@ -23,7 +23,7 @@ export default function MyApp(props) {
             maxSnack={3}
             anchorOrigin={{
               vertical: "bottom",
-              horizontal: "left",
+              horizontal: "right",
             }}
             TransitionComponent={Zoom}
             dense
