@@ -528,6 +528,9 @@ const UpdateUserBillingMutation = gql`
       planTypeId: $planTypeId
     ) {
       id
+      planType {
+        id
+      }
     }
     updatePaymentDetail(
       paymentDetaild: $paymentDetaild
@@ -538,6 +541,14 @@ const UpdateUserBillingMutation = gql`
       countryId: $countryId
     ) {
       id
+      cardHolderName
+      cardNumber
+      cardExpiryDate
+      cardCvv
+      zipCode
+      country {
+        id
+      }
     }
   }
 `

@@ -384,6 +384,13 @@ const UpdateUserProfileMutation = gql`
       repliesAlert: $repliesAlert
     ) {
       id
+      communicationAlert
+      securityAlert
+      meetupAlert
+      itemCommentAlert
+      mentionAlert
+      followAlert
+      repliesAlert
     }
   }
 `

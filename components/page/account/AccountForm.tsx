@@ -495,6 +495,13 @@ const UpdateUserProfileMutation = gql`
       vernacularId: $vernacularId
     ) {
       id
+      email
+      username
+      name
+      jobTitle
+      company
+      bio
+      phoneNumber
     }
   }
 `
