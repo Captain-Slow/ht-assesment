@@ -56,10 +56,10 @@ yarn run:studio
 
 <br/><br/>
 
-<!-- ## Reset and re-seeding the database
+## Reset and re-seeding the database
 
 <br/>
 
 ```
 yarn reset:db
-``` -->
+```
