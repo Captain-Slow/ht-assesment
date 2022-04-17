@@ -116,6 +116,7 @@ export async function main() {
             cardNumber: faker.finance.creditCardNumber("visa"),
             cardCvv: faker.finance.creditCardCVV(),
             cardExpiryDate: moment().add(5, "years").toDate(),
+            zipCode: "43300",
             country: {
               connectOrCreate: {
                 where: {

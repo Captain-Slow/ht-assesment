@@ -13,7 +13,11 @@ export interface BASIC_USER_DATA_TYPE {
     id: string
     cardHolderName: string
     cardNumber: string
-    cardExpiryDate: string
-    countryId: string
+    cardExpiryDate: Date
+    cardCvv: string
+    zipCode?: string
+    coutnry: {
+      id: string
+    }
   }
 }

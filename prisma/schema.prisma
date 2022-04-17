@@ -43,6 +43,7 @@ model PaymentDetail {
   cardNumber     String?
   cardExpiryDate DateTime?
   cardCvv        String?
+  zipCode        String?
   country        Country?  @relation(fields: [countryId], references: [id])
   countryId      String?
   user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)

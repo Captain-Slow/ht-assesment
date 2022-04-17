@@ -6,21 +6,28 @@ import {
   Grid,
   InputAdornment,
   Divider,
-  MenuItem,
+  Card,
   Stack,
   Alert,
+  CardActionArea,
+  MenuItem,
 } from "@mui/material"
 import { CSSObject } from "@mui/material/styles"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useSnackbar } from "notistack"
 import PersonIcon from "@mui/icons-material/Person"
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter"
-import BusinessIcon from "@mui/icons-material/Business"
-import EmailIcon from "@mui/icons-material/Email"
-import PhoneIcon from "@mui/icons-material/Phone"
+import InfoIcon from "@mui/icons-material/Info"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import CreditCardIcon from "@mui/icons-material/CreditCard"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
+import LockIcon from "@mui/icons-material/Lock"
+import TagIcon from "@mui/icons-material/Tag"
 import FmdGoodIcon from "@mui/icons-material/FmdGood"
 import { SelectChangeEvent } from "@mui/material/Select"
+import { DatePicker } from "@mui/x-date-pickers/DatePicker"
+import LocalizationProvider from "@mui/lab/LocalizationProvider"
+import AdapterMoment from "@mui/lab/AdapterMoment"
 
 import {
   CaptionText,
@@ -32,8 +39,8 @@ import {
 } from "../../common"
 import { BASIC_USER_DATA_TYPE } from "../../../lib/data/types/user"
 import { COUNTRY_LIST_TYPE } from "../../../lib/data/types/country"
-import { VERNACULAR_LIST_TYPE } from "../../../lib/data/types/vernacular"
 import { PLAN_TYPE_LIST_TYPE } from "../../../lib/data/types/planType"
+import moment from "moment"
 
 interface propTypes {
   userData: BASIC_USER_DATA_TYPE
@@ -43,8 +50,10 @@ interface propTypes {
 
 interface formikValues {
   cardHolderName: string
-  cardNumber: string
-  cardExpiryDate: string
+  cn: string
+  cardExpiryDate: Date
+  cardCvv: string
+  zipCode: string
   countryId: string
   planTypeId: string
 }
@@ -65,19 +74,22 @@ export default function BillingForm({
     try {
       const {
         cardHolderName,
-        cardNumber,
+        cn,
         cardExpiryDate,
         countryId,
+        zipCode,
         planTypeId,
       } = values
 
       await updateUserSubscriptionPlan({
         variables: {
-          userSubscriptionPlanId: userData.paymentDetail.id,
+          paymentDetaild: userData.paymentDetail.id,
+          userSubscriptionPlanId: userData.userSubscriptionPlan.id,
           planTypeId,
           cardHolderName,
-          cardNumber,
-          cardExpiryDate,
+          cardNumber: cn,
+          cardExpiryDate: moment(cardExpiryDate).format("DD/MM/YYYY"),
+          zipCode,
           countryId,
         },
       })
@@ -95,8 +107,10 @@ export default function BillingForm({
   const formFormik = useFormik({
     initialValues: {
       cardHolderName: userData.paymentDetail.cardHolderName,
-      cardNumber: userData.paymentDetail.cardNumber,
+      cn: userData.paymentDetail.cardNumber,
       cardExpiryDate: userData.paymentDetail.cardExpiryDate,
+      cardCvv: userData.paymentDetail.cardCvv,
+      zipCode: userData.paymentDetail.zipCode,
       countryId: userData.profile.country.id,
       planTypeId: userData.userSubscriptionPlan.planType.id,
     },
@@ -120,12 +134,20 @@ export default function BillingForm({
     setFieldValue("countryId", event.target.value as string)
   }
 
-  const languageOnChange = (event: SelectChangeEvent) => {
-    setFieldValue("vernacularId", event.target.value as string)
+  const zipCodeOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValue("zipCode", event.target.value as string)
   }
 
-  const phoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue("phoneNumber", event.target.value as string)
+  const cvvOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValue("cardCvv", event.target.value as string)
+  }
+
+  const planTypeOnChange = (planTypeId: string) => {
+    setFieldValue("planTypeId", planTypeId as string)
+  }
+
+  const expiryonChange = (newData: Date) => {
+    setFieldValue("cardExpiryDate", newData)
   }
 
   return (
@@ -147,10 +169,91 @@ export default function BillingForm({
           <CaptionText>Upgrade or downgrade your current plan.</CaptionText>
         </Box>
         <Box sx={css.alertBoxContainer}>
-          <Alert variant="outlined" severity="info">
-            Changing the plan will take effect immeditately. You will be charged
-            the rest of the current month.
+          <Alert
+            variant="outlined"
+            severity="info"
+            sx={css.alert}
+            icon={<InfoIcon sx={{ color: "#2d5bdb" }} />}
+          >
+            <Typography
+              sx={{ color: "#2d5bdb", fontWeight: "700" }}
+              variant="body2"
+            >
+              Changing the plan will take effect immeditately. You will be
+              charged the rest of the current month.
+            </Typography>
           </Alert>
+        </Box>
+        <Box sx={css.cardContainer}>
+          <Grid container justifyContent="center" spacing={3}>
+            {Object.keys(planTypeData).map(planTypeId => {
+              const specificPlanType = planTypeData[planTypeId]
+
+              const selected = values.planTypeId === planTypeId
+
+              return (
+                <Grid key={planTypeId} item sm={4} xs={6}>
+                  <Card
+                    variant={selected ? "outlined" : "elevation"}
+                    sx={selected ? css.selectedPlanTypeCard : css.planTypeCard}
+                  >
+                    <CardActionArea
+                      onClick={() => planTypeOnChange(planTypeId)}
+                    >
+                      <Box sx={css.cardWrapper}>
+                        <Box>
+                          <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="flex-start"
+                            sx={{
+                              minHeight: "26px",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: "500",
+                              }}
+                            >
+                              {specificPlanType.title}
+                            </Typography>
+                            {selected && (
+                              <Box>
+                                <CheckCircleIcon
+                                  sx={{
+                                    fontSize: "1.45rem",
+                                  }}
+                                  color="primary"
+                                  fontSize="medium"
+                                />
+                              </Box>
+                            )}
+                          </Stack>
+                          <CaptionText>
+                            {specificPlanType.description}
+                          </CaptionText>
+                        </Box>
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          alignItems="flex-end"
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: "500",
+                            }}
+                          >{`$${specificPlanType.rate}`}</Typography>
+                          <Typography variant="body2">{`/ ${specificPlanType.compoundingPeriod}`}</Typography>
+                        </Stack>
+                      </Box>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              )
+            })}
+          </Grid>
         </Box>
         <Box sx={css.dividerContainer}>
           <Divider />
@@ -178,7 +281,7 @@ export default function BillingForm({
                 inputBaseProps={{
                   value: values["cardHolderName"],
                   onBlur: handleBlur,
-                  placeholder: "Your name",
+                  placeholder: "Card holder's name",
                   size: "small",
                   onChange: handleChange,
                   name: "cardHolderName",
@@ -194,6 +297,155 @@ export default function BillingForm({
                 helperText={
                   "cardHolderName" in errors ? errors["cardHolderName"] : ""
                 }
+              />
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <BootstrapInput
+                label="Card Number"
+                inputBaseProps={{
+                  value: values["cn"],
+                  onBlur: handleBlur,
+                  placeholder: "Your name",
+                  size: "small",
+                  onChange: handleChange,
+                  name: "cn",
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ mr: 1.5 }}>
+                      <CreditCardIcon fontSize="small" sx={css.iconColor} />
+                    </InputAdornment>
+                  ),
+                }}
+                formControlProps={{
+                  error: "cn" in errors,
+                }}
+                helperText={"cn" in errors ? errors["cn"] : ""}
+              />
+            </Grid>
+            <Grid item sm={3} xs={12}>
+              <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DatePicker
+                  label=""
+                  value={new Date()}
+                  onChange={(newValue: any) => {
+                    expiryonChange(newValue.toDate())
+                  }}
+                  renderInput={({ inputRef, inputProps, InputProps }) => (
+                    <BootstrapInput
+                      label="Expiration Date"
+                      inputBaseProps={{
+                        ref: inputRef,
+                        value: moment(values["cardExpiryDate"]).format(
+                          "DD/MM/YYYY"
+                        ),
+                        placeholder: "Your name",
+                        size: "small",
+                        name: "cardExpiryDate",
+                        startAdornment: (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              paddingRight: 3,
+                              "& .MuiInputAdornment-root": {
+                                marginLeft: 0,
+                              },
+                              "& .MuiIconButton-root": {
+                                padding: 0,
+                              },
+                            }}
+                          >
+                            {InputProps?.endAdornment}
+                          </Box>
+                        ),
+                      }}
+                      formControlProps={{
+                        error: "cardExpiryDate" in errors,
+                      }}
+                      helperText={
+                        "cardExpiryDate" in errors
+                          ? errors["cardExpiryDate"]
+                          : ""
+                      }
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item sm={3} xs={12}>
+              <BootstrapInput
+                label="CVC / CVC2"
+                inputBaseProps={{
+                  value: values["cardCvv"],
+                  onBlur: handleBlur,
+                  placeholder: "Your name",
+                  size: "small",
+                  onChange: cvvOnChange,
+                  name: "cardCvv",
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ mr: 1.5 }}>
+                      <LockIcon fontSize="small" sx={css.iconColor} />
+                    </InputAdornment>
+                  ),
+                }}
+                formControlProps={{
+                  error: "cardCvv" in errors,
+                }}
+                helperText={"cardCvv" in errors ? errors["cardCvv"] : ""}
+              />
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <BootstrapSelect
+                label="Country"
+                selectProps={{
+                  value: values["countryId"],
+                  onBlur: handleBlur,
+                  size: "small",
+                  onChange: countryOnChange,
+                  name: "countryId",
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ mr: 1.5 }}>
+                      <FmdGoodIcon fontSize="small" sx={css.iconColor} />
+                    </InputAdornment>
+                  ),
+                }}
+                formControlProps={{
+                  error: "countryId" in errors,
+                }}
+                helperText={"countryId" in errors ? errors["countryId"] : ""}
+              >
+                {/* <MenuItem value="">
+                  <em>None</em>
+                </MenuItem> */}
+                {Object.keys(countryData).map(countryId => {
+                  const specificCountryData = countryData[countryId]
+
+                  return (
+                    <MenuItem key={countryId} value={countryId}>
+                      {specificCountryData.title}
+                    </MenuItem>
+                  )
+                })}
+              </BootstrapSelect>
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <BootstrapInput
+                label="Zip / Postal Code"
+                inputBaseProps={{
+                  value: values["zipCode"],
+                  onBlur: handleBlur,
+                  placeholder: "Your name",
+                  size: "small",
+                  onChange: zipCodeOnChange,
+                  name: "zipCode",
+                  startAdornment: (
+                    <InputAdornment position="start" sx={{ mr: 1.5 }}>
+                      <TagIcon fontSize="small" sx={css.iconColor} />
+                    </InputAdornment>
+                  ),
+                }}
+                formControlProps={{
+                  error: "zipCode" in errors,
+                }}
+                helperText={"zipCode" in errors ? errors["zipCode"] : ""}
               />
             </Grid>
           </Grid>
@@ -227,6 +479,8 @@ const UpdateUserBillingMutation = gql`
     $cardNumber: String!
     $cardExpiryDate: String!
     $countryId: String!
+    $zipCode: String!
+    $paymentDetaild: String!
   ) {
     updateUserSubscriptionPlan(
       userSubscriptionPlanId: $userSubscriptionPlanId
@@ -235,10 +489,11 @@ const UpdateUserBillingMutation = gql`
       id
     }
     updatePaymentDetail(
-      planTypeId: $planTypeId
+      paymentDetaild: $paymentDetaild
       cardHolderName: $cardHolderName
       cardNumber: $cardNumber
       cardExpiryDate: $cardExpiryDate
+      zipCode: $zipCode
       countryId: $countryId
     ) {
       id
@@ -247,22 +502,22 @@ const UpdateUserBillingMutation = gql`
 `
 
 const FormSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  username: Yup.string().required("Username is required"),
-  jobTitle: Yup.string().required("Job title is required"),
-  company: Yup.string().required("Company name is required"),
-  bio: Yup.string().required("Bio is required"),
-  phoneNumber: Yup.string()
-    .required("Phone number is required")
-    .test("Digits only", "Phone number should have digits only", value => {
-      return /^\d+$/.test(value)
-      // return value === "" || value === undefined ? true : /^\d+$/.test(value)
+  cardHolderName: Yup.string().required("Card holder name is required"),
+  cn: Yup.string()
+    .required("Card number is required")
+    .test("Digits only", "Card number format is incorrect", value => {
+      return /^[0-9\-]+$/.test(value)
     }),
-  email: Yup.string()
-    .email("Email must be a valid email")
-    .required("Email is required"),
-  countryId: Yup.string().required("Please select a country"),
-  vernacularId: Yup.string().required("Please select a language"),
+  cardCvv: Yup.string()
+    .required("Card CVV is required")
+    .test("Digits only", "Card cvv should have digits only", value => {
+      return /^\d+$/.test(value)
+    }),
+  zipCode: Yup.string()
+    .required("Zip code is required")
+    .test("Digits only", "Zip code should have digits only", value => {
+      return /^\d+$/.test(value)
+    }),
 })
 
 const css: CSSObject = {
@@ -295,5 +550,28 @@ const css: CSSObject = {
   },
   dividerContainer: {
     my: 5,
+  },
+  alert: {
+    bgcolor: "#eff6ff",
+  },
+  cardContainer: {
+    mt: 2.5,
+  },
+  planTypeCardContainer: {
+    flexBasis: 250,
+    flexGrow: 0,
+    maxWidth: 250,
+  },
+  selectedPlanTypeCard: {
+    borderColor: "primary.main",
+    borderWidth: 3,
+  },
+  planTypeCard: {},
+  cardWrapper: {
+    p: 2,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    minHeight: 130,
   },
 }

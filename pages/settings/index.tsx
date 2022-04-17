@@ -1,14 +1,19 @@
 import gql from "graphql-tag"
 
-import { apolloClientServerSide } from "../../lib/graphql/apollo-client"
+import {
+  apolloClientServerSide,
+  createApolloClient,
+} from "../../lib/graphql/apollo-client"
 
 export default function SettingIndexPage() {
   return null
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
   try {
-    const { data } = await apolloClientServerSide.query({
+    const client = createApolloClient(ctx.req)
+
+    const { data } = await client.query({
       query: gql`
         query User {
           showFirstUser {
@@ -29,7 +34,7 @@ export async function getServerSideProps() {
   } catch (error) {
     return {
       redirect: {
-        permanent: true,
+        permanent: false,
         destination: `/404`,
       },
       props: {},

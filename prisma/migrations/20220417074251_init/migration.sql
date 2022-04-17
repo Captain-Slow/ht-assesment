@@ -32,6 +32,7 @@ CREATE TABLE "PaymentDetail" (
     "cardNumber" TEXT,
     "cardExpiryDate" DATETIME,
     "cardCvv" TEXT,
+    "zipCode" TEXT,
     "countryId" TEXT,
     "userId" TEXT,
     CONSTRAINT "PaymentDetail_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,

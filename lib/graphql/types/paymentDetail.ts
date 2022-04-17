@@ -6,9 +6,10 @@ export const PaymentDetail = objectType({
   definition(t) {
     t.nonNull.string("id")
     t.nullable.string("cardHolderName")
-    t.nullable.date("cardNumber")
+    t.nullable.string("cardNumber")
     t.nullable.date("cardExpiryDate")
-    t.nullable.date("cardCvv")
+    t.nullable.string("cardCvv")
+    t.nullable.string("zipCode")
     t.nullable.field("country", {
       type: "Country",
       resolve: parent =>

@@ -43,7 +43,7 @@ class MyDocument extends Document {
           <meta name="application-name" content="HackerTrail Assesment" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap"
           />
           <link
             rel="stylesheet"

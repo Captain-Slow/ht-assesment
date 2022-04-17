@@ -19,6 +19,7 @@ import BusinessIcon from "@mui/icons-material/Business"
 import EmailIcon from "@mui/icons-material/Email"
 import PhoneIcon from "@mui/icons-material/Phone"
 import FmdGoodIcon from "@mui/icons-material/FmdGood"
+import LanguageIcon from "@mui/icons-material/Language"
 import { SelectChangeEvent } from "@mui/material/Select"
 
 import {
@@ -375,9 +376,9 @@ export default function AccountForm({
                 }}
                 helperText={"countryId" in errors ? errors["countryId"] : ""}
               >
-                <MenuItem value="">
+                {/* <MenuItem value="">
                   <em>None</em>
-                </MenuItem>
+                </MenuItem> */}
                 {Object.keys(countryData).map(countryId => {
                   const specificCountryData = countryData[countryId]
 
@@ -400,7 +401,7 @@ export default function AccountForm({
                   name: "vernacularId",
                   startAdornment: (
                     <InputAdornment position="start" sx={{ mr: 1.5 }}>
-                      <FmdGoodIcon fontSize="small" sx={css.iconColor} />
+                      <LanguageIcon fontSize="small" sx={css.iconColor} />
                     </InputAdornment>
                   ),
                 }}
@@ -411,9 +412,9 @@ export default function AccountForm({
                   "vernacularId" in errors ? errors["vernacularId"] : ""
                 }
               >
-                <MenuItem value="">
+                {/* <MenuItem value="">
                   <em>None</em>
-                </MenuItem>
+                </MenuItem> */}
                 {Object.keys(vernacularData).map(vernacularId => {
                   const specificVernacularData = vernacularData[vernacularId]
 

@@ -1,5 +1,6 @@
 import prisma from "../../../lib/prisma"
 import { nonNull, stringArg, extendType } from "nexus"
+import moment from "moment"
 
 export const PaymentDetailMutation = extendType({
   type: "Mutation",
@@ -11,6 +12,7 @@ export const PaymentDetailMutation = extendType({
         cardHolderName: nonNull(stringArg()),
         cardNumber: nonNull(stringArg()),
         cardExpiryDate: nonNull(stringArg()),
+        zipCode: nonNull(stringArg()),
         countryId: nonNull(stringArg()),
       },
       resolve: (
@@ -20,6 +22,7 @@ export const PaymentDetailMutation = extendType({
           cardHolderName,
           cardNumber,
           cardExpiryDate,
+          zipCode,
           countryId,
         },
         ctx
@@ -29,7 +32,8 @@ export const PaymentDetailMutation = extendType({
           data: {
             cardHolderName,
             cardNumber,
-            cardExpiryDate,
+            cardExpiryDate: moment(cardExpiryDate, "DD/MM/YYYY").toDate(),
+            zipCode,
             country: {
               connect: {
                 id: countryId,

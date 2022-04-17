@@ -62,11 +62,12 @@ export interface NexusGenObjects {
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   PaymentDetail: { // root type
-    cardCvv?: NexusGenScalars['DateTime'] | null; // DateTime
+    cardCvv?: string | null; // String
     cardExpiryDate?: NexusGenScalars['DateTime'] | null; // DateTime
     cardHolderName?: string | null; // String
-    cardNumber?: NexusGenScalars['DateTime'] | null; // DateTime
+    cardNumber?: string | null; // String
     id: string; // String!
+    zipCode?: string | null; // String
   }
   PlanType: { // root type
     compoundingPeriod?: string | null; // String
@@ -143,13 +144,14 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   PaymentDetail: { // field return type
-    cardCvv: NexusGenScalars['DateTime'] | null; // DateTime
+    cardCvv: string | null; // String
     cardExpiryDate: NexusGenScalars['DateTime'] | null; // DateTime
     cardHolderName: string | null; // String
-    cardNumber: NexusGenScalars['DateTime'] | null; // DateTime
+    cardNumber: string | null; // String
     country: NexusGenRootTypes['Country'] | null; // Country
     id: string; // String!
     user: NexusGenRootTypes['User'] | null; // User
+    zipCode: string | null; // String
   }
   PlanType: { // field return type
     compoundingPeriod: string | null; // String
@@ -237,13 +239,14 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   PaymentDetail: { // field return type name
-    cardCvv: 'DateTime'
+    cardCvv: 'String'
     cardExpiryDate: 'DateTime'
     cardHolderName: 'String'
-    cardNumber: 'DateTime'
+    cardNumber: 'String'
     country: 'Country'
     id: 'String'
     user: 'User'
+    zipCode: 'String'
   }
   PlanType: { // field return type name
     compoundingPeriod: 'String'
@@ -324,6 +327,7 @@ export interface NexusGenArgTypes {
       cardNumber: string; // String!
       countryId: string; // String!
       paymentDetaild: string; // String!
+      zipCode: string; // String!
     }
     updateProfile: { // args
       bio: string; // String!

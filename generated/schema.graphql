@@ -18,7 +18,7 @@ scalar DateTime
 type Mutation {
   signupUser(email: String!, username: String!): User
   updateNotificationSetting(communicationAlert: Boolean!, followAlert: Boolean!, itemCommentAlert: Boolean!, meetupAlert: Boolean!, mentionAlert: Boolean!, notificationSettingId: String!, repliesAlert: Boolean!, securityAlert: Boolean!): NotificationSetting
-  updatePaymentDetail(cardExpiryDate: String!, cardHolderName: String!, cardNumber: String!, countryId: String!, paymentDetaild: String!): PaymentDetail
+  updatePaymentDetail(cardExpiryDate: String!, cardHolderName: String!, cardNumber: String!, countryId: String!, paymentDetaild: String!, zipCode: String!): PaymentDetail
   updateProfile(bio: String!, company: String!, countryId: String!, email: String!, jobTitle: String!, name: String!, phoneNumber: String!, profileId: String!, username: String!, vernacularId: String!): Profile
   updateUserSubscriptionPlan(planTypeId: String!, userSubscriptionPlanId: String!): UserSubscriptionPlan
 }
@@ -38,13 +38,14 @@ type NotificationSetting {
 }
 
 type PaymentDetail {
-  cardCvv: DateTime
+  cardCvv: String
   cardExpiryDate: DateTime
   cardHolderName: String
-  cardNumber: DateTime
+  cardNumber: String
   country: Country
   id: String!
   user: User
+  zipCode: String
 }
 
 type PlanType {

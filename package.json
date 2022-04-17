@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "",
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 4001",
     "build": "next build",
     "start": "next start",
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
@@ -19,6 +19,7 @@
     "reset:db": "npx prisma migrate reset"
   },
   "dependencies": {
+    "@date-io/moment": "^2.11.0",
     "@apollo/client": "3.5.10",
     "@emotion/react": "^11.9.0",
     "@emotion/server": "^11.4.0",

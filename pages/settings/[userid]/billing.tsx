@@ -1,7 +1,10 @@
 import gql from "graphql-tag"
 import { Box } from "@mui/material"
 
-import { apolloClientServerSide } from "../../../lib/graphql/apollo-client"
+import {
+  apolloClientServerSide,
+  createApolloClient,
+} from "../../../lib/graphql/apollo-client"
 import { normaliseData } from "../../../lib/utility/transformer"
 import SettingLayout from "../../../components/layouts/SettingLayout"
 import BillingForm from "../../../components/page/billing/BillingForm"
@@ -23,21 +26,23 @@ export default function UserSettingsBillingPage({
   return (
     <Box>
       <SettingLayout page="billing" userId={user.id}>
-        {/* <BillingForm
+        <BillingForm
           userData={user}
           countryData={countries}
           planTypeData={planTypes}
-        /> */}
+        />
       </SettingLayout>
     </Box>
   )
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query, req }) {
   try {
+    const client = createApolloClient(req)
+
     const userId = query["userid"]
 
-    const { data } = await apolloClientServerSide.query({
+    const { data } = await client.query({
       variables: {
         userId,
       },
@@ -69,9 +74,14 @@ export async function getServerSideProps({ query }) {
             }
             paymentDetail {
               id
+              cardNumber
               cardHolderName
               cardExpiryDate
-              countryId
+              cardCvv
+              zipCode
+              country {
+                id
+              }
             }
           }
           allCountry {
@@ -106,7 +116,7 @@ export async function getServerSideProps({ query }) {
   } catch (error) {
     return {
       redirect: {
-        permanent: true,
+        permanent: false,
         destination: `/404`,
       },
       props: {},
