@@ -21,7 +21,6 @@ import PhoneIcon from "@mui/icons-material/Phone"
 import FmdGoodIcon from "@mui/icons-material/FmdGood"
 import { SelectChangeEvent } from "@mui/material/Select"
 
-import { BASIC_USER_DATA_TYPE } from "../../../lib/data/types/user"
 import {
   CaptionText,
   SectionTitle,
@@ -30,6 +29,7 @@ import {
   OutlinedButton,
   FilledButton,
 } from "../../common"
+import { BASIC_USER_DATA_TYPE } from "../../../lib/data/types/user"
 import { COUNTRY_LIST_TYPE } from "../../../lib/data/types/country"
 import { VERNACULAR_LIST_TYPE } from "../../../lib/data/types/vernacular"
 
@@ -139,6 +139,10 @@ export default function AccountForm({
     setFieldValue("vernacularId", event.target.value as string)
   }
 
+  const phoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValue("phoneNumber", event.target.value as string)
+  }
+
   return (
     <Box>
       <form onSubmit={handleSubmit}>
@@ -243,7 +247,7 @@ export default function AccountForm({
                 inputBaseProps={{
                   value: values["company"],
                   onBlur: handleBlur,
-                  placeholder: "Your job title",
+                  placeholder: "Your current company",
                   size: "small",
                   onChange: handleChange,
                   name: "company",
@@ -334,7 +338,7 @@ export default function AccountForm({
                   onBlur: handleBlur,
                   placeholder: "Your phone number",
                   size: "small",
-                  onChange: handleChange,
+                  onChange: phoneNumberChange,
                   name: "phoneNumber",
                   startAdornment: (
                     <InputAdornment position="start" sx={{ mr: 1.5 }}>
@@ -478,15 +482,14 @@ const FormSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   username: Yup.string().required("Username is required"),
   jobTitle: Yup.string().required("Job title is required"),
-  company: Yup.string(),
-  bio: Yup.string(),
-  phoneNumber: Yup.string().test(
-    "Digits only",
-    "Phone number should have digits only",
-    value => {
-      return value === "" || value === undefined ? true : /^\d+$/.test(value)
-    }
-  ),
+  company: Yup.string().required("Company name is required"),
+  bio: Yup.string().required("Bio is required"),
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .test("Digits only", "Phone number should have digits only", value => {
+      return /^\d+$/.test(value)
+      // return value === "" || value === undefined ? true : /^\d+$/.test(value)
+    }),
   email: Yup.string()
     .email("Email must be a valid email")
     .required("Email is required"),
