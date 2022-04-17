@@ -4,30 +4,30 @@ import { Box } from "@mui/material"
 import { apolloClientServerSide } from "../../../lib/graphql/apollo-client"
 import { normaliseData } from "../../../lib/utility/transformer"
 import SettingLayout from "../../../components/layouts/SettingLayout"
-import AccountForm from "../../../components/page/account/AccountForm"
+import BillingForm from "../../../components/page/billing/BillingForm"
 import { BASIC_USER_DATA_TYPE } from "../../../lib/data/types/user"
 import { COUNTRY_LIST_TYPE } from "../../../lib/data/types/country"
-import { VERNACULAR_LIST_TYPE } from "../../../lib/data/types/vernacular"
+import { PLAN_TYPE_LIST_TYPE } from "../../../lib/data/types/planType"
 
 interface propTypes {
   user: BASIC_USER_DATA_TYPE
   countries: COUNTRY_LIST_TYPE
-  vernaculars: VERNACULAR_LIST_TYPE
+  planTypes: PLAN_TYPE_LIST_TYPE
 }
 
-export default function UserSettingsAccountPage({
+export default function UserSettingsBillingPage({
   user,
   countries,
-  vernaculars,
+  planTypes,
 }: propTypes) {
   return (
     <Box>
-      <SettingLayout page="account" userId={user.id}>
-        <AccountForm
+      <SettingLayout page="billing" userId={user.id}>
+        {/* <BillingForm
           userData={user}
           countryData={countries}
-          vernacularData={vernaculars}
-        />
+          planTypeData={planTypes}
+        /> */}
       </SettingLayout>
     </Box>
   )
@@ -79,17 +79,20 @@ export async function getServerSideProps({ query }) {
             title
             code
           }
-          allVernacular {
+          allPlanType {
             id
             title
+            description
+            rate
+            compoundingPeriod
           }
         }
       `,
     })
-    const { userById, allCountry, allVernacular } = data
+    const { userById, allCountry, allPlanType } = data
 
     const normaliseCountryList = await normaliseData(allCountry)
-    const normaliseVernacularList = await normaliseData(allVernacular)
+    const normalisePlanTypeList = await normaliseData(allPlanType)
 
     return {
       props: {
@@ -97,7 +100,7 @@ export async function getServerSideProps({ query }) {
           ...userById,
         },
         countries: normaliseCountryList,
-        vernaculars: normaliseVernacularList,
+        planTypes: normalisePlanTypeList,
       },
     }
   } catch (error) {

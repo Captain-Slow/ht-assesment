@@ -35,6 +35,7 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
         router.push(`/settings/${userId}/account`)
         break
       case "Plan & Billing":
+        router.push(`/settings/${userId}/billing`)
         break
       case "Notifications":
         break
