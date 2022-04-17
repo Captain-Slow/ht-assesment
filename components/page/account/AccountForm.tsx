@@ -504,7 +504,6 @@ const FormSchema = Yup.object().shape({
     .required("Phone number is required")
     .test("Digits only", "Phone number should have digits only", value => {
       return /^\d+$/.test(value)
-      // return value === "" || value === undefined ? true : /^\d+$/.test(value)
     }),
   email: Yup.string()
     .email("Must be a valid email")
