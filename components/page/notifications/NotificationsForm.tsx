@@ -47,6 +47,8 @@ export default function NotificationsForm({ userData }: propTypes) {
 
   const onFormSubmit = async (values: formikValues) => {
     try {
+      console.log(values)
+
       const {
         communicationAlert,
         securityAlert,

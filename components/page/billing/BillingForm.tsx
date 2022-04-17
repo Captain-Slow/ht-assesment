@@ -72,6 +72,12 @@ export default function BillingForm({
 
   const onFormSubmit = async (values: formikValues) => {
     try {
+      console.log({
+        ...values,
+        country: countryData[values.countryId].title,
+        planType: planTypeData[values.planTypeId].title,
+      })
+
       const {
         cardHolderName,
         cn,
@@ -314,7 +320,7 @@ export default function BillingForm({
                 inputBaseProps={{
                   value: values["cn"],
                   onBlur: handleBlur,
-                  placeholder: "Your name",
+                  placeholder: "Card number",
                   size: "small",
                   onChange: handleChange,
                   name: "cn",
@@ -346,7 +352,7 @@ export default function BillingForm({
                         value: moment(values["cardExpiryDate"]).format(
                           "DD/MM/YYYY"
                         ),
-                        placeholder: "Your name",
+                        placeholder: "",
                         size: "small",
                         name: "cardExpiryDate",
                         startAdornment:
@@ -405,7 +411,7 @@ export default function BillingForm({
                 inputBaseProps={{
                   value: values["cardCvv"],
                   onBlur: handleBlur,
-                  placeholder: "Your name",
+                  placeholder: "Card security code",
                   size: "small",
                   onChange: cvvOnChange,
                   name: "cardCvv",
@@ -461,7 +467,7 @@ export default function BillingForm({
                 inputBaseProps={{
                   value: values["zipCode"],
                   onBlur: handleBlur,
-                  placeholder: "Your name",
+                  placeholder: "Card holder's current zip / postal code",
                   size: "small",
                   onChange: zipCodeOnChange,
                   name: "zipCode",

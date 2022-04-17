@@ -66,6 +66,11 @@ export default function AccountForm({
 
   const onFormSubmit = async (values: formikValues) => {
     try {
+      console.log({
+        ...values,
+        language: vernacularData[values.vernacularId].title,
+      })
+
       const {
         username,
         jobTitle,
@@ -324,7 +329,7 @@ export default function AccountForm({
                 inputBaseProps={{
                   value: values["email"],
                   onBlur: handleBlur,
-                  placeholder: "Your name",
+                  placeholder: "Your email",
                   size: "small",
                   onChange: handleChange,
                   name: "email",
