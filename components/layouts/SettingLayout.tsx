@@ -38,6 +38,7 @@ export default function SettingLayout({ children, page, userId }: propTypes) {
         router.push(`/settings/${userId}/billing`)
         break
       case "Notifications":
+        router.push(`/settings/${userId}/notifications`)
         break
       default:
         console.log("Wrong input")
@@ -233,7 +234,7 @@ const css: CSSObject = {
     fontWeight: "500",
   },
   title: {
-    fontWeight: "700",
+    fontWeight: "900",
     fontSize: "1.85rem",
   },
   contentContainer: {

@@ -1,10 +1,7 @@
 import gql from "graphql-tag"
 import { Box } from "@mui/material"
 
-import {
-  apolloClientServerSide,
-  createApolloClient,
-} from "../../../lib/graphql/apollo-client"
+import { createApolloClient } from "../../../lib/graphql/apollo-client"
 import { normaliseData } from "../../../lib/utility/transformer"
 import SettingLayout from "../../../components/layouts/SettingLayout"
 import BillingForm from "../../../components/page/billing/BillingForm"
@@ -82,6 +79,16 @@ export async function getServerSideProps({ query, req }) {
               country {
                 id
               }
+            }
+            notificationSetting {
+              id
+              communicationAlert
+              securityAlert
+              meetupAlert
+              itemCommentAlert
+              mentionAlert
+              followAlert
+              repliesAlert
             }
           }
           allCountry {

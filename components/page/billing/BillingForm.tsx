@@ -106,13 +106,13 @@ export default function BillingForm({
 
   const formFormik = useFormik({
     initialValues: {
-      cardHolderName: userData.paymentDetail.cardHolderName,
-      cn: userData.paymentDetail.cardNumber,
-      cardExpiryDate: userData.paymentDetail.cardExpiryDate,
-      cardCvv: userData.paymentDetail.cardCvv,
-      zipCode: userData.paymentDetail.zipCode,
-      countryId: userData.profile.country.id,
-      planTypeId: userData.userSubscriptionPlan.planType.id,
+      cardHolderName: userData.paymentDetail.cardHolderName ?? "",
+      cn: userData.paymentDetail.cardNumber ?? "",
+      cardExpiryDate: userData.paymentDetail.cardExpiryDate ?? new Date(),
+      cardCvv: userData.paymentDetail.cardCvv ?? "",
+      zipCode: userData.paymentDetail.zipCode ?? "",
+      countryId: userData.profile.country.id ?? "",
+      planTypeId: userData.userSubscriptionPlan.planType.id ?? "",
     },
     validationSchema: FormSchema,
     validateOnChange: false,
@@ -192,7 +192,7 @@ export default function BillingForm({
               const selected = values.planTypeId === planTypeId
 
               return (
-                <Grid key={planTypeId} item sm={4} xs={6}>
+                <Grid key={planTypeId} item sm={4} xs={12}>
                   <Card
                     variant={selected ? "outlined" : "elevation"}
                     sx={selected ? css.selectedPlanTypeCard : css.planTypeCard}
