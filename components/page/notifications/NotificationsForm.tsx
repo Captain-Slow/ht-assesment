@@ -104,7 +104,16 @@ export default function NotificationsForm({ userData }: propTypes) {
     handleSubmit,
     isSubmitting,
     setFieldValue,
+    resetForm,
   } = formFormik
+
+  const formReset = () => {
+    resetForm()
+
+    enqueueSnackbar("Form has been reset", {
+      variant: "success",
+    })
+  }
 
   return (
     <Box>
@@ -329,7 +338,13 @@ export default function NotificationsForm({ userData }: propTypes) {
         </Box>
         <Box>
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <OutlinedButton>Cancel</OutlinedButton>
+            <OutlinedButton
+              buttonProps={{
+                onClick: formReset,
+              }}
+            >
+              Cancel
+            </OutlinedButton>
             <FilledButton
               buttonProps={{
                 type: "submit",

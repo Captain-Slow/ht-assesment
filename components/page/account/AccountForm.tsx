@@ -130,6 +130,7 @@ export default function AccountForm({
     handleSubmit,
     isSubmitting,
     setFieldValue,
+    resetForm,
   } = formFormik
 
   const countryOnChange = (event: SelectChangeEvent) => {
@@ -142,6 +143,14 @@ export default function AccountForm({
 
   const phoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFieldValue("phoneNumber", event.target.value as string)
+  }
+
+  const formReset = () => {
+    resetForm()
+
+    enqueueSnackbar("Form has been reset", {
+      variant: "success",
+    })
   }
 
   return (
@@ -433,7 +442,13 @@ export default function AccountForm({
         </Box>
         <Box>
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <OutlinedButton>Cancel</OutlinedButton>
+            <OutlinedButton
+              buttonProps={{
+                onClick: formReset,
+              }}
+            >
+              Cancel
+            </OutlinedButton>
             <FilledButton
               buttonProps={{
                 type: "submit",
@@ -492,7 +507,7 @@ const FormSchema = Yup.object().shape({
       // return value === "" || value === undefined ? true : /^\d+$/.test(value)
     }),
   email: Yup.string()
-    .email("Email must be a valid email")
+    .email("Must be a valid email")
     .required("Email is required"),
   countryId: Yup.string().required("Please select a country"),
   vernacularId: Yup.string().required("Please select a language"),

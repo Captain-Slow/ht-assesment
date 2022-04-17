@@ -24,6 +24,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
 import LockIcon from "@mui/icons-material/Lock"
 import TagIcon from "@mui/icons-material/Tag"
 import FmdGoodIcon from "@mui/icons-material/FmdGood"
+import EventIcon from "@mui/icons-material/Event"
 import { SelectChangeEvent } from "@mui/material/Select"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import LocalizationProvider from "@mui/lab/LocalizationProvider"
@@ -128,6 +129,7 @@ export default function BillingForm({
     handleSubmit,
     isSubmitting,
     setFieldValue,
+    resetForm,
   } = formFormik
 
   const countryOnChange = (event: SelectChangeEvent) => {
@@ -148,6 +150,14 @@ export default function BillingForm({
 
   const expiryonChange = (newData: Date) => {
     setFieldValue("cardExpiryDate", newData)
+  }
+
+  const formReset = () => {
+    resetForm()
+
+    enqueueSnackbar("Form has been reset", {
+      variant: "success",
+    })
   }
 
   return (
@@ -340,22 +350,42 @@ export default function BillingForm({
                         placeholder: "Your name",
                         size: "small",
                         name: "cardExpiryDate",
-                        startAdornment: (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              paddingRight: 3,
-                              "& .MuiInputAdornment-root": {
-                                marginLeft: 0,
-                              },
-                              "& .MuiIconButton-root": {
-                                padding: 0,
-                              },
-                            }}
-                          >
-                            {InputProps?.endAdornment}
-                          </Box>
-                        ),
+                        startAdornment:
+                          inputProps.onClick !== undefined ? (
+                            <InputAdornment position="start" sx={{ mr: 1.5 }}>
+                              <EventIcon fontSize="small" sx={css.iconColor} />
+                            </InputAdornment>
+                          ) : (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                paddingRight: 3,
+                                "& .MuiInputAdornment-root": {
+                                  marginLeft: 0,
+                                },
+                                "& .MuiIconButton-root": {
+                                  padding: 0,
+                                  color: "text.secondary",
+                                },
+                                "& .MuiSvgIcon-root": {
+                                  fontSize: "1.25rem",
+                                },
+                              }}
+                            >
+                              {InputProps?.endAdornment}
+                            </Box>
+                          ),
+                        onClick: (e: any) => {
+                          if (inputProps.onClick !== undefined) {
+                            inputProps.onClick(e)
+                          } else {
+                            if (InputProps.endAdornment !== undefined) {
+                              InputProps.endAdornment["props"]["children"][
+                                "props"
+                              ].onClick()
+                            }
+                          }
+                        },
                       }}
                       formControlProps={{
                         error: "cardExpiryDate" in errors,
@@ -455,7 +485,13 @@ export default function BillingForm({
         </Box>
         <Box>
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <OutlinedButton>Cancel</OutlinedButton>
+            <OutlinedButton
+              buttonProps={{
+                onClick: formReset,
+              }}
+            >
+              Cancel
+            </OutlinedButton>
             <FilledButton
               buttonProps={{
                 type: "submit",
@@ -510,8 +546,8 @@ const FormSchema = Yup.object().shape({
     }),
   cardCvv: Yup.string()
     .required("Card CVV is required")
-    .test("Digits only", "Card cvv should have digits only", value => {
-      return /^\d+$/.test(value)
+    .test("Digits only", "Card cvv format is incorrect", value => {
+      return /^\d+$/.test(value) && value.length < 5
     }),
   zipCode: Yup.string()
     .required("Zip code is required")
